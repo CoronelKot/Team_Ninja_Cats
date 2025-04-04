@@ -33,7 +33,7 @@
         .registro-btn {
             width: 250px;
             height: 80px;
-            background-color: #ACACAC;
+            background-color: gray;
             color: #B8860B;
             font-weight: bold;
             border: none;
@@ -60,7 +60,7 @@
     <!-- Navbar -->
     <nav class="navbar">
         <div class="container-fluid d-flex justify-content-between align-items-center">
-            <button class="btn btn-primary">
+            <button class="btn btn-custom">
                 <img src="{% static 'images/home.jpeg' %}" alt="Botón" width="45" height="45">
             </button>
             
@@ -76,44 +76,47 @@
     </nav>
 
     <!-- Contenido principal -->
-    <div class="container text-center mt-5">
-        <h2 class="fw-bold" style="color: #111466;">Registros</h2>
-
-        <div class="d-flex justify-content-center flex-wrap gap-5 mt-4">
-            <button class="registro-btn" data-bs-toggle="modal" data-bs-target="#modalEstudiante">Estudiante</button>
-            <button class="registro-btn" data-bs-toggle="modal" data-bs-target="#modalVisitante">Visitante</button>
-        </div>
-    </div>
-
-    <!-- Modales -->
-    <div class="modal fade" id="modalEstudiante" tabindex="-1" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content">
-                <div class="modal-body text-center">
-                    <h4>Registros</h4>
-                    <div class="d-flex justify-content-around mt-3">
-                        <a href="{% url 'registroEstudiante' %}" class="btn">Entrada</a>
-                        <a href="{% url 'registrosSalidas' %}" class="btn">Salida</a>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
     
-
-    <div class="modal fade" id="modalVisitante" tabindex="-1" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content">
-                <div class="modal-body text-center">
-                    <h4>Selecciona una opción</h4>
-                    <div class="d-flex justify-content-around mt-3">
-                        <a href="{% url 'registroVisitante' %}" class="btn">Entrada</a>
-                        <a href="{% url 'registrosSalidas' %}" class="btn">Salida</a>
-                    </div>
-                </div>
+    <div class="d-flex justify-content-center align-items-center vh-50">
+      <div class="card p-4 shadow-lg" style="width: 500px;">
+          <h2 class="text-center mb-4">Registro</h2>
+          <form class="row g-3">
+              <div class="col-md-6">
+                  <label for="nombre" class="form-label">Nombre(s)</label>
+                  <input type="text" class="form-control" placeholder="" aria-label="First name">
+              </div>
+              <div class="col-md-6">
+                  <label for="apellidos" class="form-label">Apellidos</label>
+                  <input type="text" class="form-control" placeholder="" aria-label="Last name">
+              </div>
+              <div class="col-12">
+                  <label for="numCuenta" class="form-label">Código de INE</label>
+                  <input type="text" class="form-control" id="numCuenta" placeholder="1234 Main St">
+              </div>
+              <div class="col-12">
+                  <label for="horaEntrada" class="form-label">Hora de entrada</label>
+                  <input type="text" class="form-control" value="9:00 hrs." disabled>
+              </div>
+              <div class="col-12">
+                  <label for="equipo" class="form-label">Vehiculo</label>
+                  <input type="text" class="form-control" placeholder="Descripción">
+              </div>
+              <div class="col-12">
+                <label for="equipo" class="form-label">Equipo</label>
+                <input type="text" class="form-control" placeholder="Descripción">
             </div>
-        </div>
-    </div>
+              <div class="col-12">
+                  <div class="form-check">
+                      <input class="form-check-input" type="checkbox" id="registroEstudiante">
+                  </div>
+              </div>
+              <div class="col-12 text-center">
+                  <button type="submit" class="btn btn-custom">Registrar</button>
+              </div>
+          </form>
+      </div>
+  </div>
+  
 
 
 
@@ -122,4 +125,3 @@
 
 </body>
 </html>
-

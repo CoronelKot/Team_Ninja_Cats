@@ -21,7 +21,7 @@
             color: gold;
         }
         .btn-custom {
-            background-color: gray;
+            background-color: #ACACAC;
             color: #B8860B;
             border: none;
             padding: 10px 20px;
@@ -77,35 +77,25 @@
     </nav>
 
     <!-- Contenido principal -->
-    <table class="table">
-        <thead>
-          <tr>
-            <th scope="col">#</th>
-            <th scope="col">Número cuenta</th>
-            <th scope="col">Nombre</th>
-            <th scope="col">Hora de entrada</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <th scope="row">1</th>
-            <td>Mark</td>
-            <td>Otto</td>
-            <td>@mdo</td>
-          </tr>
-          <tr>
-            <th scope="row">2</th>
-            <td>Jacob</td>
-            <td>Thornton</td>
-            <td>@fat</td>
-          </tr>
-          <tr>
-            <th scope="row">3</th>
-            <td colspan="2">Larry the Bird</td>
-            <td>@twitter</td>
-          </tr>
-        </tbody>
-      </table>
+
+    <div class="container text-center mt-5">
+        <h2 class="fw-bold" style="color: #111466;">Registros de salidas</h2>
+
+    <div class="d-flex flex-column justify-content-center align-items-center vh-50 gap-3">
+
+        <select class="form-select w-50 text-center">
+            <option selected>Selecciona una opción</option>
+            <option value="1">Estudiante</option>
+            <option value="2">Visitante</option>
+        </select>
+
+        <div class="input-group w-50">
+            <input type="text" class="form-control" placeholder="Buscar..." aria-label="Buscar">
+            <button class="btn btn-custom" type="button">Buscar</button>
+        </div>
+    </div>
+    
+    
 
 
 
