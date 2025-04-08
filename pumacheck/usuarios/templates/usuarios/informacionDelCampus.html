@@ -1,0 +1,123 @@
+
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Puma Check</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            background-color: #fff7dc; /* Fondo beige */
+        }
+        .navbar {
+            background-color: #111466; /* Azul oscuro */
+            padding: 30px;
+        }
+        .navbar-brand {
+            font-size: 24px;
+            font-weight: bold;
+            color: gold;
+        }
+        .btn-custom {
+            background-color: #ACACAC;
+            color: #B8860B;
+            border: none;
+            padding: 10px 20px;
+            font-weight: bold;
+        }
+        .btn-custom:hover {
+            background-color: darkgray;
+        }
+        .registro-btn {
+            width: 250px;
+            height: 80px;
+            background-color: gray;
+            color: #B8860B;
+            font-weight: bold;
+            border: none;
+            font-size: 20px;
+        }
+        .registro-btn:hover {
+            background-color: darkgray;
+        }
+        .modal-content {
+            background-color: #d1d1d1;
+        }
+        .modal-body .btn {
+            background-color: #111466;
+            border: none;
+            font-size: 20px;
+            color: white;
+            padding: 15px 30px;
+        }
+    </style>
+</head>
+<body>
+
+
+    <!-- Navbar -->
+    <nav class="navbar">
+        <div class="container-fluid d-flex justify-content-between align-items-center">
+            <button class="btn btn-custom">
+                <img src="{% static 'images/home.jpeg' %}" alt="Botón" width="45" height="45">
+            </button>
+            
+
+            <div class="d-flex align-items-center">
+                <img src="{% static 'images/logo.jpeg' %}" height="60" alt="Logo 1" class="me-2">
+                <img src="{% static 'images/logoUnam.jpg' %}" height="60" alt="Logo 2">
+                <span style="color: #B8860B; font-weight: bold; font-size: 30px;">PUMACHECK</span>
+            </div>
+
+            <button class="btn btn-custom">Cerrar sesión</button>
+        </div>
+    </nav>
+    <br>
+    <!-- Contenido principal -->
+    <div class="d-flex justify-content-center align-items-center vh-50">
+        <div class="card p-4 shadow-lg" style="width: 800px;">
+            <table = class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>Nombre</th>
+                        <th>Identificación</th>
+                        <th>Placa</th>
+                        <th>Tipo</th>
+                        <th>Entrada</th>
+                        <th>Salida</th>
+                        <th>Equipo</th>
+                    </tr>    
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Cosme Fulanito</td>
+                        <td>xyz</td>
+                        <td>xyz</td>
+                        <td>Alumno</td>
+                        <td>11:40</td>
+                        <td>12:50</td>
+                        <td>asus roja</td>
+                    </tr>
+                    <tr>
+                        <td>Cosme Fulanito</td>
+                        <td>xyz</td>
+                        <td>xyz</td>
+                        <td>Alumno</td>
+                        <td>11:40</td>
+                        <td>12:50</td>
+                        <td>asus roja</td>
+                    </tr>
+                    
+                </tbody>
+            </table>
+    </form>
+    </div>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+</body>
+</html>
