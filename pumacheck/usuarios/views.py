@@ -1,15 +1,16 @@
 from django.shortcuts import render, redirect
 
-def opcionesRegistroIH(request):
-    return render(request, 'usuarios/opcionesRegistro.html')
 
-def registroEstudianteIH(request):
-    return render(request, 'usuarios/registroEstudiante.html')
+def inicioSistemaIH(request):
+    return render(request, 'usuarios/inicioSistema.html')
 
-def registrosSalidasIH(request):
-    return render(request, 'usuarios/registrosSalidas.html')
+def inicioAdministradorIH(request):
+    return render(request, 'usuarios/inicioAdministrador.html')
 
-def registroVisitanteIH(request):
-    return render(request, 'usuarios/registroVisitante.html')
+def inicioTrabajadorIH(request):
+    return render(request, 'usuarios/inicioTrabajador.html')
+
+def crearCuentaIH(request):
+    return render(request, 'usuarios/crearCuenta.html')
 
 # Create your views here.
