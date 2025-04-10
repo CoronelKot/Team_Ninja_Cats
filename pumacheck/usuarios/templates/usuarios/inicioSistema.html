@@ -1,0 +1,58 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Puma Check</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="{% static 'css/inicioSistema.css' %}">
+</head>
+<body>
+
+
+    <!-- Navbar -->
+    <nav class="navbar">
+        <div class="container-fluid d-flex justify-content-center align-items-center">      
+            <div class="d-flex align-items-center">
+                <img src="{% static 'images/logo.jpeg' %}" height="60" alt="Logo 1" class="me-6">
+                <span style="color: #B8860B; font-weight: bold; font-size: 30px; " class="mx-4">PUMACHECK</span>
+                <img src="{% static 'images/logoUnam.jpg' %}" height="60" alt="Logo 2" class="ms-4">
+            </div>
+
+        </div>
+    </nav>
+
+    <!-- Contenido principal -->
+    <div class="container text-center mt-5">
+        <div class="d-flex justify-content-center flex-wrap gap-5 mt-4">
+            <button class="iniciarSesion-btn" data-bs-toggle="modal" data-bs-target="#modalInicio">Iniciar sesión</button>
+        </div>
+    </div>
+
+    <!-- Modales -->
+    <div class="modal fade" id="modalInicio" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-body text-center p-4"> 
+                    <div class="field-text mb-3">
+                        <h4>Correo</h4>
+                        <input type="email" class="form-control mt-2">
+                    </div>
+                    <div class="field-text mb-3">
+                        <h4>Contraseña</h4>
+                        <input type="password" class="form-control mt-2">
+                    </div>
+                    <button class="btn btn-primary mt-3">Entrar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+</body>
+</html>   
