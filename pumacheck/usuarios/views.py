@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect
-from .models import Entrada
+from .models import Entrada,Campus
 
 def opcionesRegistroIH(request):
     return render(request, 'usuarios/opcionesRegistro.html')
@@ -26,5 +26,12 @@ def informacionDelCampusIH(request):
         'entradas_Hoy': entradas_Hoy
     }
     return render(request, 'usuarios/informacionDelCampus.html',contexto)
+def seleccionDeCampusIH(request):
+    campusPrueba = Campus.objects.all()
+
+    contexto2 = {
+        'campusPrueba': campusPrueba
+    }
+    return render(request, 'usuarios/seleccionDeCampus.html',contexto2)
 
 # Create your views here.

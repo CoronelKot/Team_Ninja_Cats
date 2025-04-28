@@ -79,6 +79,7 @@
     <!-- Contenido principal -->
     <div class="d-flex justify-content-center align-items-center vh-50">
         <div class="card p-4 shadow-lg" style="width: 800px;">
+            <h2 class="text-center mb-4">nombreCampus</h2>
             <table = class="table table-striped">
                 <thead>
                     <tr>
@@ -88,29 +89,20 @@
                         <th>Tipo</th>
                         <th>Entrada</th>
                         <th>Salida</th>
-                        <th>Equipo</th>
                     </tr>    
                 </thead>
                 <tbody>
+                    {% for entrada in entradas_Hoy %}
                     <tr>
-                        <td>Cosme Fulanito</td>
-                        <td>xyz</td>
-                        <td>xyz</td>
-                        <td>Alumno</td>
-                        <td>11:40</td>
-                        <td>12:50</td>
-                        <td>asus roja</td>
+                        <td>{{ entrada.tipo }}</td>
+                        <td>{{ entrada.nombre }}</td>
+			            <td>{{ entrada.identificacion }}</td>
+                        <td>{{ entrada.fechaEntrada }}</td>
+                        <td>{{ entrada.fechaSalida }}</td>
                     </tr>
-                    <tr>
-                        <td>Cosme Fulanito</td>
-                        <td>xyz</td>
-                        <td>xyz</td>
-                        <td>Alumno</td>
-                        <td>11:40</td>
-                        <td>12:50</td>
-                        <td>asus roja</td>
-                    </tr>
+                    {% endfor %}
                     
+                        
                 </tbody>
             </table>
     </form>

@@ -78,22 +78,35 @@
     <br>
     <!-- Contenido principal -->
     <div class="d-flex justify-content-center align-items-center vh-50">
-        <div class="card p-4 shadow-lg" style="width: 400px;">
+        <div class="card p-4 shadow-lg" style="width: 900px;">
+            <h2 class="text-center mb-4">Campus</h2>
             <table = class="table table-striped">
                 <thead>
                     <tr>
-                        <th>Clave</th>
                         <th>Nombre</th>
+                        <th>Dirección</th>
+                        <th>Director</th>
+                        <th>Telefono</th>
+                        <th>Correo</th>
                     </tr>    
                 </thead>
                 <tbody>
                     <tr>
-                        <td>1</td>
-                        <td><a href="/usuarios/informacionDelCampus" class="text-decoration-none">CU</a></td>
+                        <td><a href="/usuarios/informacionDelCampus" class="btn btn-primary">Facultad de estudios superiores Aragon</a></td>
+                        <td>Avenida hueso del iman blabla bla venustiano carranza</td>
+                        <td>Alfonso morales</td>
+                        <td>123456789</td>
+                        <td>pumitapuma@unam.mx</td>
                     </tr>
                     <tr>
-                        <td>2</td>
-                        <td><a href="file:///C:/Users/c100/Documents/Escuela/Ingenier%C3%ADa%20de%20software/Puma_Check/pumacheck/usuarios/templates/usuarios/informacionDelCampus.html" class="text-decoration-none">FAD</a></td>
+                    {% for campus in campusPrueba %}
+                    <tr>
+                        <td>{{ campus.nombreCampus }}</td>
+                        <td>{{ campus.direccion }}</td>
+			            <td>{{ campus.telefono }}</td>
+                        <td>{{ campus.correo }}</td>
+                    </tr>
+                    {% endfor %}
                     </tr>
                     
                 </tbody>
