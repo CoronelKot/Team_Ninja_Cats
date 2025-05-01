@@ -35,11 +35,17 @@
 
     <!-- Contenido principal -->
     <div class="container text-center mt-5">
-        <h2 class="fw-bold" style="color: #111466;">Registros</h2>
+        <h2 class="fw-bold" style="color: #111466;">Registro de entradas</h2>
 
         <div class="d-flex justify-content-center flex-wrap gap-5 mt-4">
-            <button class="btn btn-custom" data-bs-toggle="modal" data-bs-target="#modalEstudiante">Estudiante</button>
-            <button class="btn btn-custom" data-bs-toggle="modal" data-bs-target="#modalVisitante">Visitante</button>
+            <a href="{% url 'registroEstudiante' %}" class="btn btn-custom">Estudiante</a>
+            <a href="{% url 'registroVisitante' %}" class="btn btn-custom">Visitante</a>
+        </div>
+
+        <h2 class="fw-bold mt-5" style="color: #111466;">Registro de salidas</h2>
+
+        <div class="d-flex justify-content-center mt-4">
+            <a href="{% url 'registrosSalidas' %}" class="btn btn-custom">Salidas</a>
         </div>
     </div>
 
