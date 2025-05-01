@@ -14,12 +14,7 @@ def registroVisitanteIH(request):
     return render(request, 'usuarios/registroVisitante.html')
 
 def informacionDelCampusIH(request):
-    ## entradas_Hoy = [
-    ##    {'nombre':'Cosme fulanito1','identificacion':'xyx','placa':'xyz','tipo':'Alumno','fechaEntrada':'11:50','fechaSalida':'12:50','equipo':'asus'},
-    ##    {'nombre':'Cosme fulanito1','identificacion':'xyx','placa':'xyz','tipo':'Alumno','fechaEntrada':'11:50','fechaSalida':'12:50','equipo':'asus'},
-    ##    {'nombre':'Cosme fulanito1','identificacion':'xyx','placa':'xyz','tipo':'Alumno','fechaEntrada':'11:50','fechaSalida':'12:50','equipo':'asus'},
-    ##    {'nombre':'Cosme fulanito1','identificacion':'xyx','placa':'xyz','tipo':'Visitante','fechaEntrada':'11:50','fechaSalida':'12:50','equipo':'asus'},
-    ##]
+    
     entradas_Hoy = Entrada.objects.all()
 
     contexto = {
