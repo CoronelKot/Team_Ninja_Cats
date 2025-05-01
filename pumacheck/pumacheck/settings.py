@@ -78,9 +78,12 @@ WSGI_APPLICATION = 'pumacheck.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'NAME': BASE_DIR / 'PumaChek.sqlite3',
     }
 }
+
+#Auth
+AUTH_USER_MODEL = 'usuarios.Usuario'  
 
 
 # Password validation

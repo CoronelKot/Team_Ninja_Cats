@@ -1,4 +1,4 @@
-#!/home/anali/Documentos/IngSoft/Ana/Team_Ninja_Cats/pumacheck/.mienv/bin/python3
+#!/home/anali/Documentos/IngSoft/Ana/Team_Ninja_Cats/pumacheck/.mienv/bin/python3.13
 # -*- coding: utf-8 -*-
 import re
 import sys
