@@ -79,7 +79,7 @@
     <!-- Contenido principal -->
     <div class="d-flex justify-content-center align-items-center vh-50">
         <div class="card p-4 shadow-lg" style="width: 900px;">
-            <h2 class="text-center mb-4">Campus</h2>
+            <h2 class="text-center mb-4">Selección de Campus</h2>
             <table = class="table table-striped">
                 <thead>
                     <tr>
@@ -92,19 +92,13 @@
                 </thead>
                 <tbody>
                     <tr>
-                        <td><a href="/usuarios/informacionDelCampus" class="btn btn-primary">Facultad de estudios superiores Aragon</a></td>
-                        <td>Avenida hueso del iman blabla bla venustiano carranza</td>
-                        <td>Alfonso morales</td>
-                        <td>123456789</td>
-                        <td>pumitapuma@unam.mx</td>
-                    </tr>
+                    {% for campus in campus %}
                     <tr>
-                    {% for campus in campusPrueba %}
-                    <tr>
-                        <td>{{ campus.nombreCampus }}</td>
-                        <td>{{ campus.direccion }}</td>
-			            <td>{{ campus.telefono }}</td>
-                        <td>{{ campus.correo }}</td>
+                        <td><a href="{% url 'informacionDelCampus' campus.id %}" class="btn btn-primary">{{ campus.nombreCampus }}</a></td>
+                        <td>{{ cam.direccion }}</td>
+                        <td>{{ cam.director }}</td>
+			            <td>{{ cam.telefono }}</td>
+                        <td>{{ cam.correo }}</td>
                     </tr>
                     {% endfor %}
                     </tr>

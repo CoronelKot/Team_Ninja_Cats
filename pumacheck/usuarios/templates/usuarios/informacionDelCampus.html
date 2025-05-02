@@ -79,26 +79,45 @@
     <!-- Contenido principal -->
     <div class="d-flex justify-content-center align-items-center vh-50">
         <div class="card p-4 shadow-lg" style="width: 800px;">
-            <h2 class="text-center mb-4">nombreCampus</h2>
+            <h2 class="text-center mb-4">{{ campus.nombreCampus }}</h2>
             <table = class="table table-striped">
                 <thead>
                     <tr>
+                        <th>Tipo</th>
                         <th>Nombre</th>
                         <th>Identificación</th>
-                        <th>Placa</th>
-                        <th>Tipo</th>
                         <th>Entrada</th>
                         <th>Salida</th>
                     </tr>    
                 </thead>
                 <tbody>
-                    {% for entrada in entradas_Hoy %}
+                    {% for visita in visitas %}
                     <tr>
-                        <td>{{ entrada.tipo }}</td>
-                        <td>{{ entrada.nombre }}</td>
-			            <td>{{ entrada.identificacion }}</td>
-                        <td>{{ entrada.fechaEntrada }}</td>
-                        <td>{{ entrada.fechaSalida }}</td>
+                        <td>{{ visita.tipo }}</td>
+                        <td>{{ visita.nombre }}</td>
+			            <td>{{ visita.identificador }}</td>
+                        <td>{{ visita.horaEntrada }}</td>
+                        <td>{{ visita.horaSalida }}</td>
+                    </tr>
+                    {% endfor %}
+
+                    {% for vehiculo in vehiculos %}
+                    <tr>
+                        <td>Vehiculo</td>
+                        <td>{{ vehiculo.visita.nombre }}</td>
+			            <td>{{ vehiculo.numPlaca }}</td>
+                        <td>{{ vehiculo.horaEntrada }}</td>
+                        <td>{{ vehiculo.horaSalida }}</td>
+                    </tr>
+                    {% endfor %}
+
+                    {% for equipo in equipos %}
+                    <tr>
+                        <td>Equipo</td>
+                        <td>{{ equipo.visita.nombre }}</td>
+			            <td>{{ equipo.descripcion }}</td>
+                        <td>{{ equipo.horaEntrada }}</td>
+                        <td>{{ equipo.horaSalida }}</td>
                     </tr>
                     {% endfor %}
                     

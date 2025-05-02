@@ -6,6 +6,6 @@ urlpatterns = [
     path('registroEstudiante/', registroEstudianteIH, name='registroEstudiante'),
     path('registrosSalidas/', registrosSalidasIH, name='registrosSalidas'),
     path('registroVisitante/', registroVisitanteIH, name='registroVisitante'),
-    path('informacionDelCampus/', informacionDelCampusIH, name='informacionDelCampus'),
     path('seleccionDeCampus/', seleccionDeCampusIH, name='seleccionDeCampus'),
+    path('informacionDelCampus/<int:campus_id>/', informacionDelCampusIH, name='informacionDelCampus'),
 ]
