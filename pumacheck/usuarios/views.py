@@ -25,11 +25,15 @@ def registrar_visita(request):
 
         if not nombre or not apellidos or not identificador:
             return JsonResponse({'mensaje': 'Faltan campos'}, status=400)
+        
+        campus = request.user.campus
 
         visita = Visita.objects.create(
             nombre=f"{nombre} {apellidos}",
             identificador=identificador,
-            tipo=tipo, horaEntrada=horaEntrada)
+            tipo=tipo, horaEntrada=horaEntrada,
+            campus=campus)
+        
         
         # Si registró vehículo
         num_placa = request.POST.get('placa')
@@ -65,11 +69,14 @@ def registrar_visita_visitante(request):
 
         if not nombre or not apellidos or not identificador:
             return JsonResponse({'mensaje': 'Faltan campos'}, status=400)
+        
+        campus = request.user.campus
 
         visita = Visita.objects.create(
             nombre=f"{nombre} {apellidos}",
             identificador=identificador,
-            tipo=tipo, horaEntrada=horaEntrada)
+            tipo=tipo, horaEntrada=horaEntrada,
+            campus=campus)
         
         # Si registró vehículo
         num_placa = request.POST.get('placa')

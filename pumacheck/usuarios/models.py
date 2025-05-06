@@ -8,6 +8,7 @@ class Visita(models.Model):
     tipo = models.CharField(max_length=10)
     horaEntrada = models.DateTimeField()
     horaSalida = models.DateTimeField(null=True, blank=True)
+    campus = models.ForeignKey('Campus', on_delete=models.CASCADE, null=True)
 
 #Modelo Vehiculo que se relaciona con Visita
 class Vehiculo(models.Model):

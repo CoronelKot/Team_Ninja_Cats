@@ -29,7 +29,7 @@
     <!-- Contenido principal -->
     <div class="d-flex justify-content-center align-items-center vh-100">
         <div class="card p-4 shadow-lg" style="width: 500px;">
-            <h2 class="text-center mb-4">Registro de Estudiantes</h2>
+            <h2 class="text-center mb-4">Registro de Visitantes</h2>
             <form id="form-registro" class="row g-3 needs-validation" novalidate data-url="{% url 'registrar_visita_visitante' %}">
                 {% csrf_token %}
                 <div class="col-md-6">
@@ -39,6 +39,7 @@
                 <div class="col-md-6">
                     <label for="apellidos" class="form-label">Apellidos</label>
                     <input type="text" class="form-control" id="apellidos" name="apellidos" required>
+
                 </div>
                 <div class="col-12">
                     <label for="numCuenta" class="form-label">Código de INE</label>
@@ -46,7 +47,7 @@
                 </div>
                 <div class="col-12">
                     <label for="horaEntrada" class="form-label">Hora de entrada</label>
-                    <input type="text" class="form-control" value="Automática al registrar" disabled>
+                    <input type="datetime-local" class="form-control" id="horaEntrada" name="horaEntrada" readonly required>
                 </div>
                 <div class="col-md-6">
                     <label for="vehiculo" class="form-label">Vehículo (Opcional)</label>
