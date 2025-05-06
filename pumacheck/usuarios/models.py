@@ -1,5 +1,4 @@
 from django.db import models
-from django.contrib.auth.models import AbstractBaseUser, BaseUserManager
 
 #Modelo Visita que puede ser estudiante o visitante
 class Visita(models.Model):
