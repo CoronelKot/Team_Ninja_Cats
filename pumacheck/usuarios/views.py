@@ -40,16 +40,18 @@ def login_view(request):
             return redirect('inicioTrabajador')
         else:
             messages.error(request, 'Correo o contraseña incorrectos.')
-            return redirect('errorConexion') 
+            return render(request, 'usuarios/inicioSistema.html', {'messages': messages.get_messages(request)})
     else:
-        return redirect('inicioSistema')
+        return render(request, 'usuarios/inicioSistema.html')
 
+@login_required
 def logout_view(request):
     logout(request)
     if request.method == 'POST':
         logout(request)
     return redirect('inicioSistema')
 
+@login_required
 def crear_trabajador(request):
     if request.method == 'POST':
         print("Formulario recibido")
@@ -79,7 +81,7 @@ def crear_trabajador(request):
             is_staff=False,
             is_superuser=False,
         )
-        messages.success(request, "Trabajador creado exitosamente.")
+        messages.success(request, "Registro exitoso.")
         return redirect('crearCuenta') 
 
     return redirect('inicioAdministrador')

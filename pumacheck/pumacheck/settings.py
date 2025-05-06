@@ -49,6 +49,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'pumacheck.middleware.ManejoErroresConexionMiddleware',
 ]
 
 ROOT_URLCONF = 'pumacheck.urls'
@@ -122,6 +123,9 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 
+LOGIN_URL = 'inicioSistema'  # URL para redirigir si no está autenticado
+LOGIN_REDIRECT_URL = 'inicioAdministrador'  # URL después de iniciar sesión
+
 STATICFILES_DIRS = [
     os.path.join(BASE_DIR, 'static'),
 ]
@@ -130,3 +134,6 @@ STATICFILES_DIRS = [
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+    
+

@@ -26,7 +26,10 @@
                 <span style="color: #B8860B; font-weight: bold; font-size: 30px;">PUMACHECK</span>
             </div>
 
-            <button class="btn btn-custom">Cerrar sesión</button>
+            <form action="{% url 'logout' %}" method="post" style="display:inline;">
+                {% csrf_token %}
+                <button type="submit" class="btn btn-custom">Cerrar sesión</button>
+              </form>
         </div>
     </nav>
 

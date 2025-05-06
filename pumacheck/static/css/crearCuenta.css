@@ -44,9 +44,9 @@ html, body {
     border: none !important;
 }
 .min-vh-80{
-    margin-top: 2%;
+    margin-top: 0%;
 }
 .img-fluid{
-    margin-right: 200px;
+    margin-right: 0px;
     margin-left: 150px;
 }

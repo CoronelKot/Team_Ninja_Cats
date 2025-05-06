@@ -26,36 +26,20 @@
                 <span style="color: #B8860B; font-weight: bold; font-size: 30px;">PUMACHECK</span>
             </div>
 
-            <button class="btn btn-custom">Cerrar sesión</button>
+            <form action="{% url 'logout' %}" method="post" style="display:inline;">
+                {% csrf_token %}
+                <button type="submit" class="btn btn-custom">Cerrar sesión</button>
+            </form>
         </div>
     </nav>
 
     <!-- Contenido principal -->
     <div class="container text-center mt-5">
         <div class="d-flex justify-content-center flex-wrap gap-5 mt-4">
-            <button class="iniciarSesion-btn" data-bs-toggle="modal" data-bs-target="#modalInicio">Modificar registros</button>
-            <button class="iniciarSesion-btn" data-bs-toggle="modal" data-bs-target="#modalInicio">Crear cuenta</button>
-            <button class="iniciarSesion-btn" data-bs-toggle="modal" data-bs-target="#modalInicio">Ver información de campus</button>
-            <button class="iniciarSesion-btn" data-bs-toggle="modal" data-bs-target="#modalInicio">Ver perfil</button>
-        </div>
-    </div>
-
-    <!-- Modales -->
-    <div class="modal fade" id="modalInicio" tabindex="-1" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content">
-                <div class="modal-body text-center p-4"> 
-                    <div class="field-text mb-3">
-                        <h4>Correo</h4>
-                        <input type="email" class="form-control mt-2">
-                    </div>
-                    <div class="field-text mb-3">
-                        <h4>Contraseña</h4>
-                        <input type="password" class="form-control mt-2">
-                    </div>
-                    <button class="btn btn-primary mt-3">Entrar</button>
-                </div>
-            </div>
+            <button class="iniciarSesion-btn">Modificar registros</button>
+            <a class="iniciarSesion-btn" href="{% url 'crearCuenta' %}">Crear cuenta</a>
+            <button class="iniciarSesion-btn">Ver información de campus</button>
+            <button class="iniciarSesion-btn">Ver perfil</button>
         </div>
     </div>
 
