@@ -29,6 +29,22 @@ def errorConexionIH(request):
 def errorCerrarIH(request):
     return render(request, 'usuarios/errorCerrar.html')
 
+@login_required
+def opcionesRegistroIH(request):
+    return render(request, 'usuarios/opcionesRegistro.html')
+
+@login_required
+def registroEstudianteIH(request):
+    return render(request, 'usuarios/registroEstudiante.html')
+
+@login_required
+def registrosSalidasIH(request):
+    return render(request, 'usuarios/registrosSalidas.html')
+
+@login_required
+def registroVisitanteIH(request):
+    return render(request, 'usuarios/registroVisitante.html')
+
 def login_view(request):
     if request.method == 'POST':
         correo = request.POST.get('correo')
@@ -105,7 +121,7 @@ def crear_administrador(request):
         )
     return render(request, 'inicioAdministrador.html')
 
-
+@login_required
 def registrar_visita(request):
     if request.method == 'POST':
         nombre = request.POST.get('nombre')
@@ -149,7 +165,7 @@ def registrar_visita(request):
 
     return JsonResponse({'mensaje': 'Método no permitido'}, status=405)
 
-
+@login_required
 def registrar_visita_visitante(request):
     if request.method == 'POST':
         nombre = request.POST.get('nombre')
@@ -205,6 +221,7 @@ def buscar_visita(request):
 
     return render(request, 'usuarios/registroSalida.html')
 
+@login_required
 def registrar_salida_visita(request):
     if request.method == 'POST':
         visita_id = request.POST.get('visita_id')
