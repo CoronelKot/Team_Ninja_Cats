@@ -37,14 +37,6 @@ class Usuario(AbstractBaseUser, PermissionsMixin):
 
     def __str__(self): 
         return self.correo
-        
-    def registrarEntrada(self, visitante, horaEntrada):
-        visitante.horaEntrada = horaEntrada
-        visitante.save()
-
-    def registrarSalida(self, visitante, horaSalida):
-        visitante.horaSalida = horaSalida
-        visitante.save()
 
             
 #Modelo Campus que se relaciona con Trabajador
