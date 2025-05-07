@@ -1,5 +1,5 @@
 from django.urls import path
-from .views import opcionesRegistroIH, registroEstudianteIH, registroVisitanteIH, registrosSalidasIH, registrar_visita, buscar_visita, registrar_salida_visita, registrar_visita_visitante
+from .views import opcionesRegistroIH, registroEstudianteIH, registroVisitanteIH, registrosSalidasIH, registrar_visita, buscar_visita, registrar_salida_visita, registrar_visita_visitante, inicioSistemaIH, inicioAdministradorIH, inicioTrabajadorIH, crearCuentaIH, errorConexionIH, errorCerrarIH, login_view, crear_trabajador, logout_view
 
 urlpatterns = [
     path('opcionesRegistro/', opcionesRegistroIH, name='opcionesRegistro'),
@@ -10,4 +10,13 @@ urlpatterns = [
     path('registro-salidas/', buscar_visita, name='buscar_visita'),
     path('registrar-salida/', registrar_salida_visita, name='registrar_salida_visita'),
     path('registrarVisita/', registrar_visita_visitante, name='registrar_visita_visitante'),
+    path('inicioSistema/', inicioSistemaIH, name='inicioSistema'),
+    path('inicioAdministrador/', inicioAdministradorIH, name='inicioAdministrador'),
+    path('inicioTrabajador/', inicioTrabajadorIH, name='inicioTrabajador'),
+    path('crearCuenta/', crearCuentaIH, name='crearCuenta'),
+    path('errorConexion/', errorConexionIH, name='errorConexion'),
+    path('errorCerrar/', errorCerrarIH, name='errorCerrar'),
+    path('login/', login_view, name='login'),
+    path('crear-trabajador/',crear_trabajador, name='crear_trabajador'),
+    path('logout/', logout_view, name='logout')
 ]
