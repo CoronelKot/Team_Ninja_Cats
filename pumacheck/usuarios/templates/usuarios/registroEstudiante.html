@@ -22,7 +22,10 @@
                 <img src="{% static 'images/logoUnam.jpg' %}" height="60" alt="Logo 2">
                 <span style="color: #B8860B; font-weight: bold; font-size: 30px;">PUMACHECK</span>
             </div>
-            <button class="btn btn-custom">Cerrar sesión</button>
+            <form action="{% url 'logout' %}" method="post" style="display:inline;">
+                {% csrf_token %}
+                <button type="submit" class="btn btn-custom">Cerrar sesión</button>
+            </form>
         </div>
     </nav>
 
@@ -42,7 +45,7 @@
                 </div>
                 <div class="col-12">
                     <label for="numCuenta" class="form-label">Número de cuenta</label>
-                    <input type="text" class="form-control" id="numCuenta" name="numCuenta" required>
+                    <input type="text" class="form-control" id="identificador" name="numcuenta" required>
                 </div>
                 <div class="col-12">
                     <label for="horaEntrada" class="form-label">Hora de entrada</label>

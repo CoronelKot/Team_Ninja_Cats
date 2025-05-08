@@ -1,30 +1,143 @@
 from django.shortcuts import render, redirect
 from django.utils import timezone
-from .models import Visita, Vehiculo, Equipo
+from .models import Visita, Vehiculo, Equipo, Usuario
 from django.http import JsonResponse
+from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.decorators import login_required, user_passes_test
+from django.contrib import messages
 
+def inicioSistemaIH(request):
+    return render(request, 'usuarios/inicioSistema.html')
+
+@login_required
+def inicioAdministradorIH(request):
+    return render(request, 'usuarios/inicioAdministrador.html')
+
+@login_required
+def inicioTrabajadorIH(request):
+    return render(request, 'usuarios/inicioTrabajador.html')
+
+@login_required
+def crearCuentaIH(request):
+    return render(request, 'usuarios/crearCuenta.html')
+
+@login_required
+def errorConexionIH(request):
+    return render(request, 'usuarios/errorConexion.html')
+
+@login_required
+def errorCerrarIH(request):
+    return render(request, 'usuarios/errorCerrar.html')
+
+@login_required
 def opcionesRegistroIH(request):
     return render(request, 'usuarios/opcionesRegistro.html')
 
+@login_required
 def registroEstudianteIH(request):
     return render(request, 'usuarios/registroEstudiante.html')
 
+@login_required
 def registrosSalidasIH(request):
     return render(request, 'usuarios/registrosSalidas.html')
 
+@login_required
 def registroVisitanteIH(request):
     return render(request, 'usuarios/registroVisitante.html')
 
+def login_view(request):
+    if request.method == 'POST':
+        correo = request.POST.get('correo')
+        password = request.POST.get('password')
+        usuario = authenticate(request, username=correo, password=password)
+        print("usuario:", usuario)
+        if usuario is not None:
+            login(request, usuario)
+            if usuario.es_admin:
+                return redirect('inicioAdministrador')
+            return redirect('inicioTrabajador')
+        else:
+            messages.error(request, 'Correo o contraseña incorrectos.')
+            return render(request, 'usuarios/inicioSistema.html',{
+                'abrir_modal': True
+            })
+    else:
+        return render(request, 'usuarios/inicioSistema.html')
+
+@login_required
+def logout_view(request):
+    logout(request)
+    if request.method == 'POST':
+        logout(request)
+    return redirect('inicioSistema')
+
+@login_required
+def crear_trabajador(request):
+    if request.method == 'POST':
+        print("Formulario recibido")
+        nombre = request.POST.get('nombre')
+        apellidos = request.POST.get('apellidos')
+        telefono = request.POST.get('telefono')
+        correo = request.POST.get('correo')
+        password = request.POST.get('contrasena')
+        confirmar = request.POST.get('confirmar_contrasena')
+
+        if Usuario.objects.filter(correo=correo).exists():
+            messages.error(request, "El correo ya está registrado.")
+            return redirect('crear_trabajador')
+        
+        if password != confirmar:
+            messages.error(request, 'Las contraseñas no coinciden.')
+            return redirect('crearCuenta')
+        
+        nombre_completo = f"{nombre} {apellidos}"
+
+        Usuario.objects.create_user(
+            correo=correo,
+            password=password,
+            nombre_completo=nombre_completo,
+            telefono=telefono,
+            es_admin=False,
+            is_staff=False,
+            is_superuser=False,
+        )
+        messages.success(request, "Registro exitoso.")
+        return redirect('crearCuenta') 
+
+    return redirect('inicioAdministrador')
+    
+# Solo permite acceso si el usuario actual es superusuario de Django
+@user_passes_test(lambda u: u.is_superuser)
+def crear_administrador(request):
+    if request.method == 'POST':
+        correo = request.POST.get('correo')
+        password = request.POST.get('password')
+        usuario = Usuario.objects.create_user(
+            correo=correo,
+            password=password,
+            nombre_completo=request.POST.get('nombre'),
+            telefono=request.POST.get('telefono'),
+            es_admin=True,
+            is_staff=True,
+            campus = request.POST.get('campus')
+        )
+    return render(request, 'inicioAdministrador.html')
+
+@login_required
 def registrar_visita(request):
     if request.method == 'POST':
         nombre = request.POST.get('nombre')
         apellidos = request.POST.get('apellidos')
-        identificador = request.POST.get('numCuenta')
+        identificador = request.POST.get('identificador')
         tipo = 'Estudiante'
         horaEntrada = timezone.now()
 
         if not nombre or not apellidos or not identificador:
             return JsonResponse({'mensaje': 'Faltan campos'}, status=400)
+        
+        # Validación de número de cuenta: exactamente 9 dígitos numéricos
+        if not identificador.isdigit() or len(identificador) != 9:
+            return JsonResponse({'mensaje': 'El número de cuenta debe tener exactamente 9 dígitos.'}, status=400)
         
         campus = request.user.campus
 
@@ -58,17 +171,20 @@ def registrar_visita(request):
 
     return JsonResponse({'mensaje': 'Método no permitido'}, status=405)
 
-
+@login_required
 def registrar_visita_visitante(request):
     if request.method == 'POST':
         nombre = request.POST.get('nombre')
         apellidos = request.POST.get('apellidos')
-        identificador = request.POST.get('numCuenta')
+        identificador = request.POST.get('identificador')
         tipo = 'Visitante'
         horaEntrada = timezone.now()
 
         if not nombre or not apellidos or not identificador:
             return JsonResponse({'mensaje': 'Faltan campos'}, status=400)
+        
+        if len(identificador) != 9:
+            return JsonResponse({'mensaje': 'El código de INE debe tener exactamente 16 caracteres.'}, status=400)
         
         campus = request.user.campus
 
@@ -114,6 +230,7 @@ def buscar_visita(request):
 
     return render(request, 'usuarios/registroSalida.html')
 
+@login_required
 def registrar_salida_visita(request):
     if request.method == 'POST':
         visita_id = request.POST.get('visita_id')
