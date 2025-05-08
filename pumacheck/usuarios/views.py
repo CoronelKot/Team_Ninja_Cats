@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect
 from django.utils import timezone
-from .models import Visita, Vehiculo, Equipo, Usuario
+from .models import Visita, Vehiculo, Equipo, Usuario,Campus
 from django.http import JsonResponse
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required, user_passes_test
@@ -44,6 +44,29 @@ def registrosSalidasIH(request):
 @login_required
 def registroVisitanteIH(request):
     return render(request, 'usuarios/registroVisitante.html')
+
+@login_required
+def informacionDelCampusIH(request, campus_id):
+    campus = Campus.objects.get(pk=campus_id)
+    visitas = Visita.objects.filter(equipo__visita__campus=campus).distinct()
+    vehiculos = Vehiculo.objects.filter(visita__in=visitas)
+    equipos = Equipo.objects.filter(visita__in=visitas)
+
+    contexto = {
+        'campus': campus,
+        'visitas': visitas,
+        'vehiculos': vehiculos,
+        'equipos': equipos,
+    }
+    return render(request, 'usuarios/informacionDelCampus.html', contexto)
+@login_required
+def seleccionDeCampusIH(request):
+    campus = Campus.objects.all()
+
+    contexto2 = {
+        'campus': campus
+    }
+    return render(request, 'usuarios/seleccionDeCampus.html',contexto2)
 
 def login_view(request):
     if request.method == 'POST':
