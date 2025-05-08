@@ -58,7 +58,7 @@ def login_view(request):
             return redirect('inicioTrabajador')
         else:
             messages.error(request, 'Correo o contraseña incorrectos.')
-            return render(request, 'usuarios/inicioSistema.html', {'messages': messages.get_messages(request)})
+            return render(request, 'usuarios/inicioSistema.html', {'abrir_modal': True})
     else:
         return render(request, 'usuarios/inicioSistema.html')
 

@@ -15,32 +15,32 @@
     <!-- Navbar -->
     <nav class="navbar">
         <div class="container-fluid d-flex justify-content-between align-items-center">
-            <a href="{% url 'inicioSistema' %}" class="btn btn-primary">
-                <img src="{% static 'images/home.jpeg' %}" alt="Botón" width="45" height="45">
-            </a>
             
 
             <div class="d-flex align-items-center">
                 <img src="{% static 'images/logo.jpeg' %}" height="60" alt="Logo 1" class="me-2">
                 <img src="{% static 'images/logoUnam.jpg' %}" height="60" alt="Logo 2">
+            </div>
+            <div class="d-flex align-items-center">
                 <span style="color: #B8860B; font-weight: bold; font-size: 30px;">PUMACHECK</span>
             </div>
+
 
             <form action="{% url 'logout' %}" method="post" style="display:inline;">
                 {% csrf_token %}
                 <button type="submit" class="btn btn-custom">Cerrar sesión</button>
-              </form>
+            </form>
         </div>
     </nav>
 
     <!-- Contenido principal -->
     <div class="container text-center mt-5">
         <div class="d-flex justify-content-center flex-wrap gap-10 mt-4">
-            <button class="iniciarSesion-btn" data-bs-toggle="modal" data-bs-target="#modalInicio">Registrar etradas/salidas</button>
-            <button class="iniciarSesion-btn" data-bs-toggle="modal" data-bs-target="#modalInicio">Ver información de campus</button>
+            <a class="btn iniciarSesion-btn" href="{% url 'opcionesRegistro' %}">Registrar etradas/salidas</a>
+            <a class="btn iniciarSesion-btn" href="{% url 'opcionesRegistro' %}">Ver información de campus</a>
         </div>
         <div>
-            <button class="iniciarSesion-btn" data-bs-toggle="modal" data-bs-target="#modalInicio">Ver perfil</button>
+            <a class="btn iniciarSesion-btn" href="{% url 'opcionesRegistro' %}">Ver perfil</a>
         </div>
     </div>
 
