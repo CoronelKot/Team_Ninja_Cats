@@ -14,15 +14,18 @@
     <!-- Navbar -->
     <nav class="navbar">
         <div class="container-fluid d-flex justify-content-between align-items-center">
-            <a href="{% url 'inicioTrabajador' %}" class="btn btn-custom">
+            <button class="btn btn-custom">
                 <img src="{% static 'images/home.jpeg' %}" alt="Botón" width="45" height="45">
-            </a>
+            </button>
             <div class="d-flex align-items-center">
                 <img src="{% static 'images/logo.jpeg' %}" height="60" alt="Logo 1" class="me-2">
                 <img src="{% static 'images/logoUnam.jpg' %}" height="60" alt="Logo 2">
                 <span style="color: #B8860B; font-weight: bold; font-size: 30px;">PUMACHECK</span>
             </div>
-            <button class="btn btn-custom">Cerrar sesión</button>
+            <form action="{% url 'logout' %}" method="post" style="display:inline;">
+                {% csrf_token %}
+                <button type="submit" class="btn btn-custom">Cerrar sesión</button>
+            </form>
         </div>
     </nav>
 
@@ -42,7 +45,7 @@
                 </div>
                 <div class="col-12">
                     <label for="numCuenta" class="form-label">Número de cuenta</label>
-                    <input type="text" class="form-control" id="numCuenta" name="numCuenta" required>
+                    <input type="text" class="form-control" id="identificador" name="numcuenta" required>
                 </div>
                 <div class="col-12">
                     <label for="horaEntrada" class="form-label">Hora de entrada</label>

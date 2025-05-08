@@ -58,7 +58,9 @@ def login_view(request):
             return redirect('inicioTrabajador')
         else:
             messages.error(request, 'Correo o contraseña incorrectos.')
-            return render(request, 'usuarios/inicioSistema.html', {'abrir_modal': True})
+            return render(request, 'usuarios/inicioSistema.html',{
+                'abrir_modal': True
+            })
     else:
         return render(request, 'usuarios/inicioSistema.html')
 
@@ -126,12 +128,16 @@ def registrar_visita(request):
     if request.method == 'POST':
         nombre = request.POST.get('nombre')
         apellidos = request.POST.get('apellidos')
-        identificador = request.POST.get('numCuenta')
+        identificador = request.POST.get('identificador')
         tipo = 'Estudiante'
         horaEntrada = timezone.now()
 
         if not nombre or not apellidos or not identificador:
             return JsonResponse({'mensaje': 'Faltan campos'}, status=400)
+        
+        # Validación de número de cuenta: exactamente 9 dígitos numéricos
+        if not identificador.isdigit() or len(identificador) != 9:
+            return JsonResponse({'mensaje': 'El número de cuenta debe tener exactamente 9 dígitos.'}, status=400)
         
         campus = request.user.campus
 
@@ -170,12 +176,15 @@ def registrar_visita_visitante(request):
     if request.method == 'POST':
         nombre = request.POST.get('nombre')
         apellidos = request.POST.get('apellidos')
-        identificador = request.POST.get('numCuenta')
+        identificador = request.POST.get('identificador')
         tipo = 'Visitante'
         horaEntrada = timezone.now()
 
         if not nombre or not apellidos or not identificador:
             return JsonResponse({'mensaje': 'Faltan campos'}, status=400)
+        
+        if len(identificador) != 9:
+            return JsonResponse({'mensaje': 'El código de INE debe tener exactamente 16 caracteres.'}, status=400)
         
         campus = request.user.campus
 

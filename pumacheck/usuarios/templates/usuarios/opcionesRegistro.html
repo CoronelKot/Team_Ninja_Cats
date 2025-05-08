@@ -18,9 +18,9 @@
     <!-- Navbar -->
     <nav class="navbar">
         <div class="container-fluid d-flex justify-content-between align-items-center">
-            <a href="{% url 'inicioTrabajador' %}" class="btn btn-custom">
+            <button class="btn btn-primary">
                 <img src="{% static 'images/home.jpeg' %}" alt="Botón" width="45" height="45">
-            </a>
+            </button>
             
 
             <div class="d-flex align-items-center">
@@ -29,7 +29,10 @@
                 <span style="color: #B8860B; font-weight: bold; font-size: 30px;">PUMACHECK</span>
             </div>
 
-            <button class="btn btn-custom">Cerrar sesión</button>
+            <form action="{% url 'logout' %}" method="post" style="display:inline;">
+                {% csrf_token %}
+                <button type="submit" class="btn btn-custom">Cerrar sesión</button>
+            </form>
         </div>
     </nav>
 

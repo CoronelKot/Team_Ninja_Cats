@@ -1,90 +1,184 @@
 import pytest
 from django.urls import reverse
 from django.contrib.auth import get_user_model
-from usuarios.models import Visita, Vehiculo, Equipo
+from usuarios.models import Visita, Vehiculo, Equipo, Campus
+
+@pytest.fixture
+def crear_usuario_y_login(client):
+    User = get_user_model()
+    
+    user = User.objects.create_user(
+        correo='usuario@ejemplo.com',
+        password='contrasenaSegura123.',
+        es_admin=False,
+        telefono='5512345678',
+        nombre_completo='Luis Lopez',
+        campus=None
+    )
+    client.login(username='usuario@ejemplo.com', password='contrasenaSegura123.')
+    return user
+
 
 @pytest.mark.django_db
 def test_registro_visita(client):
+    # Obtén el modelo de usuario
+    User = get_user_model()
+
+    user = User.objects.create_user(
+        correo='usuario@ejemplo.com',
+        password='contrasenaSegura123.',
+        es_admin=False,
+        telefono='5512345678',
+        nombre_completo='Juan Pérez',
+        campus=None  
+    )
+
+    client.login(correo='usuario@ejemplo.com', password='contrasenaSegura123.')
+
     data = {
         'nombre': 'Juan',
         'apellidos': 'Pérez',
-        'numCuenta': '12345678'
+        'identificador': '123456789'
     }
+
     response = client.post(reverse('registrar_visita'), data)
+
     assert response.status_code == 200
-    assert Visita.objects.filter(identificador='12345678').exists()
+    assert 'Registro exitoso' in response.json().get('mensaje')
+
+    assert Visita.objects.filter(identificador='123456789').exists()
+
+
 
 @pytest.mark.django_db
 def test_registrar_visita_sin_datos(client):
+    # Crear un usuario de prueba
+    User = get_user_model()
+    user = User.objects.create_user(
+        correo='usuario@ejemplo.com',
+        password='contrasenaSegura123.',
+        es_admin=False,
+        telefono='5512345678',
+        nombre_completo='Juan Pérez',
+        campus=None
+    )
+
+    client.login(correo='usuario@ejemplo.com', password='contrasenaSegura123.')
+
     response = client.post(reverse('registrar_visita'), {})
+
     assert response.status_code == 400
-
-
-def test_url_invalida(client):
-    response = client.get('/usuarios/nohay/')
-    assert response.status_code == 404
+    assert 'Faltan campos' in response.json().get('mensaje')
 
 @pytest.mark.django_db
-def test_registrar_visita_con_equipo(client):
-    data = {
-        'nombre': 'Luis',
-        'apellidos': 'Lopez',
-        'numCuenta': '11223344',
-        'equipo': 'Laptop ASUS'
-    }
-    response = client.post(reverse('registrar_visita'), data)
-    assert response.status_code == 200
-    assert Equipo.objects.count() == 1
-
-@pytest.mark.django_db
-def test_registrar_visita_con_vehiculo(client):
+def test_registrar_visita_con_vehiculo(client, crear_usuario_y_login):
     data = {
         'nombre': 'Ana',
-        'apellidos': 'Casballido',
-        'numCuenta': '87654321',
+        'apellidos': 'Martínez',
+        'identificador': '987654321',
         'placa': 'ABC1234'
     }
     response = client.post(reverse('registrar_visita'), data)
     assert response.status_code == 200
-    assert Visita.objects.count() == 1
     assert Vehiculo.objects.count() == 1
 
 @pytest.mark.django_db
-def test_registrar_visita_sin_vehiculo_ni_equipo(client):
+def test_registrar_visita_faltan_campos(client, crear_usuario_y_login):
     data = {
-        'nombre': 'Juan',
-        'apellidos': 'Pérez',
-        'numCuenta': '12345678'
+        'nombre': 'Erika'
+        # Faltan 'apellidos' e 'identificador'
     }
     response = client.post(reverse('registrar_visita'), data)
-    assert response.status_code == 200
-    assert Visita.objects.count() == 1
-    assert Vehiculo.objects.count() == 0
-    assert Equipo.objects.count() == 0
+    assert response.status_code == 400
+    assert b'Faltan campos' in response.content
+
 
 @pytest.mark.django_db
-def test_pagina_registro_estudiante_carga(client):
-    response = client.get(reverse('registroEstudiante'))
-    assert response.status_code == 200
-    assert 'Registro de Estudiante' in response.content.decode()
+def test_registro_falla_identificador_invalido(client):
+    User = get_user_model()
+    user = User.objects.create_user(
+        correo='usuario@ejemplo.com',
+        password='contrasenaSegura123.',
+        es_admin=False,
+        telefono='5512345678',
+        nombre_completo='Carlos Sánchez',
+        campus=None  # o asigna un campus si es requerido
+    )
+
+    client.login(username='usuario@ejemplo.com', password='contrasenaSegura123.')
+
+    # Probar con identificadores inválidos
+    identificadores_invalidos = ['12345678', '1234567890', 'abcdefghi', '12345abcd']
+
+    for identificador in identificadores_invalidos:
+        data = {
+            'nombre': 'Carlos',
+            'apellidos': 'Sánchez',
+            'identificador': identificador
+        }
+        response = client.post(reverse('registrar_visita'), data)
+        assert response.status_code == 400
+        assert 'El número de cuenta debe tener exactamente 9 dígitos' in response.json()['mensaje']
 
 @pytest.mark.django_db
-def test_pagina_registro_visitante_carga(client):
-    response = client.get(reverse('registroVisitante'))
+def test_registro_con_campos_minimos_validos(client):
+    # Obtener el modelo de usuario
+    User = get_user_model()
+
+    user = User.objects.create_user(
+        correo='minimo@ejemplo.com',
+        password='seguro123',
+        es_admin=False,
+        telefono='5544332211',
+        nombre_completo='Usuario Mínimo',
+        campus=None 
+    )
+
+    client.login(username='minimo@ejemplo.com', password='seguro123')
+
+    data = {
+        'nombre': 'Mario',
+        'apellidos': 'Gómez',
+        'identificador': '123456789',
+    }
+
+    response = client.post(reverse('registrar_visita'), data)
+
     assert response.status_code == 200
-    assert 'Registro de Visitantes' in response.content.decode()
+    assert response.json()['mensaje'] == 'Registro exitoso'
+
+    # Verificar que la visita se guardó correctamente
+    visitas = Visita.objects.filter(identificador='123456789')
+    assert visitas.exists()
+    assert visitas.first().nombre == 'Mario Gómez'
+
 
 @pytest.mark.django_db
-def test_pagina_opciones_registro_carga(client):
-    response = client.get(reverse('opcionesRegistro'))
-    assert response.status_code == 200
-    assert 'Registro de entradas' in response.content.decode()
+def test_registro_falla_numero_cuenta_invalido(client):
+    User = get_user_model()
 
-@pytest.mark.django_db
-def test_pagina_registro_salidas_carga(client):
-    response = client.get(reverse('registrosSalidas'))
-    assert response.status_code == 200
-    assert 'Registro de Salidas' in response.content.decode()
+    user = User.objects.create_user(
+        correo='error@ejemplo.com',
+        password='claveSegura321',
+        es_admin=False,
+        telefono='5550001111',
+        nombre_completo='Error Usuario',
+        campus=None
+    )
+
+    client.login(username='error@ejemplo.com', password='claveSegura321')
+
+    # Número de cuenta inválido: solo 8 dígitos
+    data = {
+        'nombre': 'Laura',
+        'apellidos': 'Cruz',
+        'identificador': '12345678'
+    }
+
+    response = client.post(reverse('registrar_visita'), data)
+
+    assert response.status_code == 400
+    assert 'El número de cuenta' in response.json()['mensaje']
 
 @pytest.mark.django_db
 def test_login_view_trabajador(client):

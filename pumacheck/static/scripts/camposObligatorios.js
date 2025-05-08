@@ -3,7 +3,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const mensaje = document.getElementById('mensaje');
 
     // Agregar mensajes personalizados a campos requeridos
-    const campos = ['nombre', 'apellidos', 'numCuenta'];
+    const campos = ['nombre', 'apellidos', 'identificador'];
     campos.forEach(id => {
         const campo = document.getElementById(id);
 
@@ -95,6 +95,28 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Opcional: actualiza cada minuto
     setInterval(actualizarHora, 1000);
+});
+
+document.addEventListener('DOMContentLoaded', function () {
+    const form = document.getElementById('form-registro');
+    const numCuentaInput = document.getElementById('identificador');
+    const mensajeDiv = document.getElementById('mensaje');
+
+    form.addEventListener('submit', function (event) {
+        const numCuenta = numCuentaInput.value.trim();
+
+        // Verificar que el número de cuenta tenga exactamente 9 dígitos numéricos
+        const esValido = /^\d{9}$/.test(numCuenta);
+
+        if (!esValido) {
+            event.preventDefault(); // Detener el envío
+            mensajeDiv.innerHTML = '<div class="alert alert-danger">El identificador cuenta debe tener exactamente 9 dígitos.</div>';
+            numCuentaInput.classList.add('is-invalid');
+        } else {
+            mensajeDiv.innerHTML = '';
+            numCuentaInput.classList.remove('is-invalid');
+        }
+    });
 });
 
 
