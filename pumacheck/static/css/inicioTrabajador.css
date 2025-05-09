@@ -53,7 +53,10 @@ body {
         inset -3px -3px 5px rgba(255, 255, 255, 0.5);
     border: none !important;
 }
-.iniciarSesion-btn {
+.iniciarSesion-btn{
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
     width: 250px;
     height: 60px;
     margin-top: 10%;
@@ -64,6 +67,7 @@ body {
     font-weight: bold;
     box-shadow: inset 3px 3px 5px rgba(0, 0, 0, 0.2), 
         inset -3px -3px 5px rgba(255, 255, 255, 0.5);
+    text-decoration: none !important;
 }
 .iniciarSesion-btn:hover {
     background-color: #f0f0f0;
