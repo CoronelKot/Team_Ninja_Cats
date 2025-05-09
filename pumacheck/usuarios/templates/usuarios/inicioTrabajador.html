@@ -37,7 +37,11 @@
     <div class="container text-center mt-5">
         <div class="d-flex justify-content-center flex-wrap gap-10 mt-4">
             <a class="btn iniciarSesion-btn" href="{% url 'opcionesRegistro' %}">Registrar etradas/salidas</a>
-            <a class="btn iniciarSesion-btn" href="{% url 'opcionesRegistro' %}">Ver información de campus</a>
+            {% if user.is_authenticated and user.campus %}
+            <a class="btn iniciarSesion-btn" href="{% url 'informacionDelCampus' user.campus.id %}">Ver información de campus</a>
+            {% else %}
+                <a class="btn iniciarSesion-btn disabled" href="#">Campus no asignado</a>
+            {% endif %}
         </div>
         <div>
             <a class="btn iniciarSesion-btn" href="{% url 'opcionesRegistro' %}">Ver perfil</a>
