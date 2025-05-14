@@ -38,6 +38,13 @@ class Usuario(AbstractBaseUser, PermissionsMixin):
     def __str__(self): 
         return self.correo
     
+    def __str__(self): 
+        # Si el usuario tiene un campus asignado, muestra el nombre del campus
+        if self.campus:
+            return f"{self.nombre_completo} - {self.campus.nombreCampus}"
+        # Si no tiene un campus asignado, muestra solo el nombre completo
+        return self.nombre_completo
+    
 #Modelo Visita que puede ser estudiante o visitante
 class Visita(models.Model):
     nombre = models.CharField(max_length=50)

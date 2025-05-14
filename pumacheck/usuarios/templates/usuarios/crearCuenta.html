@@ -27,65 +27,71 @@
             </div>
 
             <form action="{% url 'logout' %}" method="post" style="display:inline;">
+              {% csrf_token %}
               <button type="submit" class="btn btn-custom">Cerrar sesión</button>
-            </form>
+          </form>
         </div>
     </nav>
 
     <!-- Contenido principal -->
-    <div class="container min-vh-80 d-flex align-items-center">
-        <div class="row justify-content-center w-70">
-          <!-- Columna del formulario -->
-          <div class="col-lg-5 col-md-6 mb-4 mb-md-0">
-            <form method="POST" action="{% url 'crear_trabajador' %}">
-              {% csrf_token %}
-                            {% if messages %}
-                  {% for message in messages %}
-                      {% if message.tags == 'error' %}
-                          <p style="color: red; font-weight: bold;">*{{ message }}</p>
-                      {% elif message.tags == 'success' %}
-                          <p style="color: green; font-weight: bold;">{{ message }}</p>
-                      {% endif %}
-                  {% endfor %}
-              {% endif %}
-              <div class="mb-0">
-                <label for="nombre" class="form-label">Nombre</label>
-                <input type="text" class="form-control" id="nombre" name="nombre" required>
-              </div>
-              <div class="mb-0">
-                <label for="apellidos" class="form-label">Apellidos</label>
-                <input type="text" class="form-control" id="apellidos" name="apellidos" required>
-              </div>
-              <div class="mb-0">
-                <label for="telefono" class="form-label">Teléfono</label>
-                <input type="tel" class="form-control" id="telefono" name="telefono" required>
-              </div>
-              <div class="mb-0">
-                <label for="campus" class="form-label">Campus</label>
-                <input type="text" class="form-control" id="campus" name="campus" required>
-              </div>
-              <div class="mb-0">
-                <label for="correo" class="form-label">Correo</label>
-                <input type="email" class="form-control" id="correo" name="correo" required>
-              </div>
-              <div class="mb-0">
-                <label for="contrasena" class="form-label">Contraseña</label>
-                <input type="password" class="form-control" id="contrasena" name="contrasena" required>
-              </div>
-              <div class="mb-0">
-                <label for="confirmar_contrasena" class="form-label">Confirmar contraseña</label>
-                <input type="password" class="form-control" id="confirmar_contrasena" name="confirmar_contrasena" required>
-              </div>
-              <button type="submit" class="btn btn-primary w-50">Crear cuenta</button>
+<div class="container min-vh-80 d-flex align-items-center">
+    <div class="row justify-content-center w-100">
+        <!-- Columna del formulario -->
+        <div class="col-lg-6 col-md-6 mb-4 mb-md-0 d-flex align-items-center">
+            <form method="POST" action="{% url 'crear_trabajador' %}" class="w-100">
+                {% csrf_token %}
+                {% if messages %}
+                    {% for message in messages %}
+                        {% if message.tags == 'error' %}
+                            <p style="color: red; font-weight: bold;">*{{ message }}</p>
+                        {% elif message.tags == 'success' %}
+                            <p style="color: green; font-weight: bold;">{{ message }}</p>
+                        {% endif %}
+                    {% endfor %}
+                {% endif %}
+                <div class="mb-0">
+                    <label for="nombre" class="form-label">Nombre</label>
+                    <input type="text" class="form-control" id="nombre" name="nombre" required>
+                </div>
+                <div class="mb-0">
+                    <label for="apellidos" class="form-label">Apellidos</label>
+                    <input type="text" class="form-control" id="apellidos" name="apellidos" required>
+                </div>
+                <div class="mb-0">
+                    <label for="telefono" class="form-label">Teléfono</label>
+                    <input type="tel" class="form-control" id="telefono" name="telefono" required>
+                </div>
+                <div class="mb-0">
+                    <label for="campus" class="form-label">Campus</label>
+                    <select class="form-select" id="campus" name="campus" required>
+                        <option value="">Selecciona un campus</option>
+                        {% for c in campus_disponibles %}
+                            <option value="{{ c.id }}">{{ c.nombreCampus }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="mb-0">
+                    <label for="correo" class="form-label">Correo</label>
+                    <input type="email" class="form-control" id="correo" name="correo" required>
+                </div>
+                <div class="mb-0">
+                    <label for="contrasena" class="form-label">Contraseña</label>
+                    <input type="password" class="form-control" id="contrasena" name="contrasena" required>
+                </div>
+                <div class="mb-0">
+                    <label for="confirmar_contrasena" class="form-label">Confirmar contraseña</label>
+                    <input type="password" class="form-control" id="confirmar_contrasena" name="confirmar_contrasena" required>
+                </div>
+                <button type="submit" class="btn btn-primary w-50 mt-3">Crear cuenta</button>
             </form>
-            
-          </div>
-      
-          <div class="col-md-6 d-none d-md-flex align-items-center">
-            <img src="{% static 'images/crearCuenta.png' %}" class="img-fluid" alt="Ilustración de registro">
-          </div>
         </div>
-      </div>
+
+        <!-- Columna de la imagen -->
+        <div class="col-lg-6 col-md-6 d-flex align-items-center justify-content-center">
+            <img src="{% static 'images/crearCuenta.png' %}" class="img-fluid" alt="Ilustración de registro" style="max-width: 100%; height: auto;">
+        </div>
+    </div>
+</div>
 
 
 

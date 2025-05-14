@@ -5,6 +5,7 @@ from django.http import JsonResponse
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required, user_passes_test
 from django.contrib import messages
+from usuarios.models import Campus
 
 def inicioSistemaIH(request):
     return render(request, 'usuarios/inicioSistema.html')
@@ -15,11 +16,22 @@ def inicioAdministradorIH(request):
 
 @login_required
 def inicioTrabajadorIH(request):
-    return render(request, 'usuarios/inicioTrabajador.html')
+    usuario = request.user  #Usuario actual
+    campus = usuario.campus  #Campus del usuario
+
+    contexto = {
+        'campus': campus
+    }
+    return render(request, 'usuarios/inicioTrabajador.html', contexto)
 
 @login_required
 def crearCuentaIH(request):
-    return render(request, 'usuarios/crearCuenta.html')
+    campus_disponibles = Campus.objects.all()
+
+    contexto = {
+        'campus_disponibles': campus_disponibles
+    }
+    return render(request, 'usuarios/crearCuenta.html', contexto)
 
 @login_required
 def errorConexionIH(request):
@@ -104,6 +116,7 @@ def crear_trabajador(request):
         correo = request.POST.get('correo')
         password = request.POST.get('contrasena')
         confirmar = request.POST.get('confirmar_contrasena')
+        campus_id = request.POST.get('campus')
 
         if Usuario.objects.filter(correo=correo).exists():
             messages.error(request, "El correo ya está registrado.")
@@ -115,6 +128,8 @@ def crear_trabajador(request):
         
         nombre_completo = f"{nombre} {apellidos}"
 
+        campus = Campus.objects.get(id=campus_id) if campus_id else None
+
         Usuario.objects.create_user(
             correo=correo,
             password=password,
@@ -123,6 +138,7 @@ def crear_trabajador(request):
             es_admin=False,
             is_staff=False,
             is_superuser=False,
+            campus=campus
         )
         messages.success(request, "Registro exitoso.")
         return redirect('crearCuenta') 
