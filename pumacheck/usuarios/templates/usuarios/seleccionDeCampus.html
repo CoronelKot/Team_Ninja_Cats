@@ -20,14 +20,12 @@
                     {% for campus in campus %}
                     <tr>
                         <td><a href="{% url 'informacionDelCampus' campus.id %}" class="btn btn-primary">{{ campus.nombreCampus }}</a></td>
-                        <td>{{ cam.direccion }}</td>
-                        <td>{{ cam.director }}</td>
-			            <td>{{ cam.telefono }}</td>
-                        <td>{{ cam.correo }}</td>
+                        <td>{{ campus.direccion }}</td>
+                        <td>{{ campus.director }}</td>
+			            <td>{{ campus.telefono }}</td>
+                        <td>{{ campus.correo }}</td>
                     </tr>
                     {% endfor %}
-                    </tr>
-                    
                 </tbody>
             </table>
     </form>

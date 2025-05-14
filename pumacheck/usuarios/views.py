@@ -60,7 +60,7 @@ def registroVisitanteIH(request):
 @login_required
 def informacionDelCampusIH(request, campus_id):
     campus = Campus.objects.get(pk=campus_id)
-    visitas = Visita.objects.filter(equipo__visita__campus=campus).distinct()
+    visitas = Visita.objects.filter(campus=campus)
     vehiculos = Vehiculo.objects.filter(visita__in=visitas)
     equipos = Equipo.objects.filter(visita__in=visitas)
 

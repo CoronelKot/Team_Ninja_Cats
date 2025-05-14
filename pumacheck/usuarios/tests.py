@@ -305,6 +305,17 @@ def test_crear_trabajador_exitoso(client):
 
 @pytest.mark.django_db
 def test_informacion_del_campus_context(client):
+    User = get_user_model()
+    
+    user = User.objects.create_user(
+        correo='usuario@ejemplo.com',
+        password='contrasenaSegura123.',
+        es_admin=False,
+        telefono='5512345678',
+        nombre_completo='Luis Lopez',
+        campus=None
+    )
+    client.force_login(user)
     campus = Campus.objects.create(
         nombreCampus="FES Iztacala",
         direccion="Calle Salud 22",
@@ -346,6 +357,17 @@ def test_informacion_del_campus_context(client):
     assert list(response.context['equipos']) == [equipo]
 @pytest.mark.django_db
 def test_seleccion_de_campus_context(client):
+    User = get_user_model()
+    
+    user = User.objects.create_user(
+        correo='usuario@ejemplo.com',
+        password='contrasenaSegura123.',
+        es_admin=False,
+        telefono='5512345678',
+        nombre_completo='Luis Lopez',
+        campus=None
+    )
+    client.force_login(user)
     # Crea un dato de ejemplo en Campus
     campus = Campus.objects.create(
         nombreCampus="FES Zaragoza",

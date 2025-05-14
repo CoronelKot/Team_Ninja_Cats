@@ -42,3 +42,11 @@ body {
     color: white;
     padding: 15px 30px;
 }
+
+.body-fondo {
+    background-image: url("../images/Biblioteca3.jpg_large");
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    min-height: 100vh;
+}
