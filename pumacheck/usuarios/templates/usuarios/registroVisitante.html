@@ -45,7 +45,7 @@
 
                 </div>
                 <div class="col-12">
-                    <label for="numCuenta" class="form-label">Código de INE</label>
+                    <label for="numCuenta" class="form-label">CURP</label>
                     <input type="text" class="form-control" id="identificador" name="identificador" required>
                 </div>
                 <div class="col-12">
@@ -54,10 +54,10 @@
                 </div>
                 <div class="col-md-6">
                     <label for="vehiculo" class="form-label">Vehículo (Opcional)</label>
-                    <input type="text" class="form-control" id="vehiculo" name="placa" placeholder="Placa">
+                    <input type="text" class="form-control" id="placas" name="placa" placeholder="Placa">
                 </div>
                 <div class="col-12">
-                    <label for="equipo" class="form-label">Equipo (Opcional)</label>
+                    <label for="equipo" class="form-label">Equipo (Opcional) Máximo 100 caracteres</label>
                     <input type="text" class="form-control" id="equipo" name="equipo" placeholder="Descripción del equipo">
                 </div>
                 <div class="col-12 text-center">
@@ -73,7 +73,7 @@
     <!-- SweetAlert2 -->
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <!-- Verificacion de campos -->
-    <script src="{% static 'scripts/camposObligatorios.js' %}"></script>
+    <script src="{% static 'scripts/registroVisitante.js' %}"></script>
 
     
 </body>

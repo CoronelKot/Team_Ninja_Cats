@@ -167,7 +167,7 @@ def registrar_visita(request):
     if request.method == 'POST':
         nombre = request.POST.get('nombre')
         apellidos = request.POST.get('apellidos')
-        identificador = request.POST.get('identificador')
+        identificador = request.POST.get('numCuenta')
         tipo = 'Estudiante'
         horaEntrada = timezone.now()
 
@@ -222,8 +222,8 @@ def registrar_visita_visitante(request):
         if not nombre or not apellidos or not identificador:
             return JsonResponse({'mensaje': 'Faltan campos'}, status=400)
         
-        if len(identificador) != 9:
-            return JsonResponse({'mensaje': 'El código de INE debe tener exactamente 16 caracteres.'}, status=400)
+        if len(identificador) != 16:
+            return JsonResponse({'mensaje': 'El código de CURP debe tener exactamente 16 caracteres.'}, status=400)
         
         campus = request.user.campus
 
