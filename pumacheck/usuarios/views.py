@@ -260,9 +260,10 @@ def buscar_visita(request):
     if request.method == 'POST':
         tipo = request.POST.get('tipo')
         identificador = request.POST.get('identificador')
+        campus = request.user.campus
 
         try:
-            visita = Visita.objects.get(identificador=identificador,horaSalida__isnull=True)
+            visita = Visita.objects.get(identificador=identificador,horaSalida__isnull=True,campus=campus)
             return render(request, 'usuarios/registrosSalidas.html', {'visita': visita})
         except Visita.DoesNotExist:
             return render(request, 'usuarios/registrosSalidas.html', {'error': 'No se encontró la visita o ya registró su salida.'})

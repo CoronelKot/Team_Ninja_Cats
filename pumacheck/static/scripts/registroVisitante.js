@@ -51,7 +51,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         // Validar número de cuenta
         const identificador = numCuentaInput.value.trim();
-        if (!/^\d{16}$/.test(identificador)) {
+        if (!/^[A-Z0-9]{16}$/i.test(identificador)) {
             errores.push("El CURP debe tener exactamente 16 dígitos.");
             numCuentaInput.classList.add('is-invalid');
         } else {
