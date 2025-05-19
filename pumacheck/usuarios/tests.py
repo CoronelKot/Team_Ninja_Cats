@@ -34,20 +34,28 @@ def test_registro_visita(client):
         campus=None  
     )
 
-    client.login(correo='usuario@ejemplo.com', password='contrasenaSegura123.')
+    client.force_login(user)
 
     data = {
         'nombre': 'Juan',
         'apellidos': 'Pérez',
-        'identificador': '123456789'
+        'numCuenta': '123456789',
+        'tipo': 'Estudiante',
+        'horaEntrada': '2025-05-14 8:59:00',
+        'campus': 'None'
     }
 
+    
     response = client.post(reverse('registrar_visita'), data)
+
+    print("STATUS:", response.status_code)
+    print("RESPONSE:", response.content)
 
     assert response.status_code == 200
     assert 'Registro exitoso' in response.json().get('mensaje')
 
     assert Visita.objects.filter(identificador='123456789').exists()
+    
 
 
 
@@ -76,7 +84,7 @@ def test_registrar_visita_con_vehiculo(client, crear_usuario_y_login):
     data = {
         'nombre': 'Ana',
         'apellidos': 'Martínez',
-        'identificador': '987654321',
+        'numCuenta': '987654321',
         'placa': 'ABC1234'
     }
     response = client.post(reverse('registrar_visita'), data)
@@ -115,7 +123,7 @@ def test_registro_falla_identificador_invalido(client):
         data = {
             'nombre': 'Carlos',
             'apellidos': 'Sánchez',
-            'identificador': identificador
+            'numCuenta': identificador
         }
         response = client.post(reverse('registrar_visita'), data)
         assert response.status_code == 400
@@ -140,7 +148,7 @@ def test_registro_con_campos_minimos_validos(client):
     data = {
         'nombre': 'Mario',
         'apellidos': 'Gómez',
-        'identificador': '123456789',
+        'numCuenta': '123456789',
     }
 
     response = client.post(reverse('registrar_visita'), data)
@@ -173,7 +181,7 @@ def test_registro_falla_numero_cuenta_invalido(client):
     data = {
         'nombre': 'Laura',
         'apellidos': 'Cruz',
-        'identificador': '12345678'
+        'numCuenta': '12345678'
     }
 
     response = client.post(reverse('registrar_visita'), data)

@@ -7,78 +7,16 @@ from django.contrib.auth.decorators import login_required, user_passes_test
 from django.contrib import messages
 from usuarios.models import Campus
 
+# ============================
+# Vistas públicas (login/logout)
+# ============================
+
+# Página de inicio del sistema con el formulario de login.
+
 def inicioSistemaIH(request):
     return render(request, 'usuarios/inicioSistema.html')
 
-@login_required
-def inicioAdministradorIH(request):
-    return render(request, 'usuarios/inicioAdministrador.html')
-
-@login_required
-def inicioTrabajadorIH(request):
-    usuario = request.user  #Usuario actual
-    campus = usuario.campus  #Campus del usuario
-
-    contexto = {
-        'campus': campus
-    }
-    return render(request, 'usuarios/inicioTrabajador.html', contexto)
-
-@login_required
-def crearCuentaIH(request):
-    campus_disponibles = Campus.objects.all()
-
-    contexto = {
-        'campus_disponibles': campus_disponibles
-    }
-    return render(request, 'usuarios/crearCuenta.html', contexto)
-
-@login_required
-def errorConexionIH(request):
-    return render(request, 'usuarios/errorConexion.html')
-
-@login_required
-def errorCerrarIH(request):
-    return render(request, 'usuarios/errorCerrar.html')
-
-@login_required
-def opcionesRegistroIH(request):
-    return render(request, 'usuarios/opcionesRegistro.html')
-
-@login_required
-def registroEstudianteIH(request):
-    return render(request, 'usuarios/registroEstudiante.html')
-
-@login_required
-def registrosSalidasIH(request):
-    return render(request, 'usuarios/registrosSalidas.html')
-
-@login_required
-def registroVisitanteIH(request):
-    return render(request, 'usuarios/registroVisitante.html')
-
-@login_required
-def informacionDelCampusIH(request, campus_id):
-    campus = Campus.objects.get(pk=campus_id)
-    visitas = Visita.objects.filter(campus=campus)
-    vehiculos = Vehiculo.objects.filter(visita__in=visitas)
-    equipos = Equipo.objects.filter(visita__in=visitas)
-
-    contexto = {
-        'campus': campus,
-        'visitas': visitas,
-        'vehiculos': vehiculos,
-        'equipos': equipos,
-    }
-    return render(request, 'usuarios/informacionDelCampus.html', contexto)
-@login_required
-def seleccionDeCampusIH(request):
-    campus = Campus.objects.all()
-
-    contexto2 = {
-        'campus': campus
-    }
-    return render(request, 'usuarios/seleccionDeCampus.html',contexto2)
+# Autenticación de usuario y redirección según su rol.
 
 def login_view(request):
     if request.method == 'POST':
@@ -99,6 +37,8 @@ def login_view(request):
     else:
         return render(request, 'usuarios/inicioSistema.html')
 
+
+#Cierra la sesión del usuario.
 @login_required
 def logout_view(request):
     logout(request)
@@ -106,6 +46,45 @@ def logout_view(request):
         logout(request)
     return redirect('inicioSistema')
 
+
+# ============================
+# Vistas de inicio según rol
+# ============================
+
+
+#Pantalla de inicio para usuarios administradores.
+@login_required
+def inicioAdministradorIH(request):
+    return render(request, 'usuarios/inicioAdministrador.html')
+
+#Pantalla de inicio para usuarios trabajadores, muestra el campus al que pertenecen
+@login_required
+def inicioTrabajadorIH(request):
+    usuario = request.user  #Usuario actual
+    campus = usuario.campus  #Campus del usuario
+
+    contexto = {
+        'campus': campus
+    }
+    return render(request, 'usuarios/inicioTrabajador.html', contexto)
+
+
+# ============================
+# Registro de usuarios
+# ============================
+
+#Formulario para creación de cuenta de trabajador (solo visible para administradores).
+@login_required
+def crearCuentaIH(request):
+    campus_disponibles = Campus.objects.all()
+
+    contexto = {
+        'campus_disponibles': campus_disponibles
+    }
+    return render(request, 'usuarios/crearCuenta.html', contexto)
+
+
+#Registra un nuevo trabajador asociado a un campus.
 @login_required
 def crear_trabajador(request):
     if request.method == 'POST':
@@ -144,8 +123,10 @@ def crear_trabajador(request):
         return redirect('crearCuenta') 
 
     return redirect('inicioAdministrador')
-    
+
+
 # Solo permite acceso si el usuario actual es superusuario de Django
+#Crea un administrador (solo accesible por superusuarios de Django).
 @user_passes_test(lambda u: u.is_superuser)
 def crear_administrador(request):
     if request.method == 'POST':
@@ -162,6 +143,12 @@ def crear_administrador(request):
         )
     return render(request, 'inicioAdministrador.html')
 
+
+# ============================
+# Registro de visitas
+# ============================
+
+#Registra una visita de tipo Estudiante y opciona vehículo/equipo.
 @login_required
 def registrar_visita(request):
     if request.method == 'POST':
@@ -210,6 +197,7 @@ def registrar_visita(request):
 
     return JsonResponse({'mensaje': 'Método no permitido'}, status=405)
 
+#Registra una visita de tipo Visitante que requiere del CURP de 16 caracteres.
 @login_required
 def registrar_visita_visitante(request):
     if request.method == 'POST':
@@ -256,6 +244,11 @@ def registrar_visita_visitante(request):
 
     return JsonResponse({'mensaje': 'Método no permitido'}, status=405)
 
+# ============================
+# Registro de salida
+# ============================
+
+#Busca una visita que no tenga la salida registrada
 def buscar_visita(request):
     if request.method == 'POST':
         tipo = request.POST.get('tipo')
@@ -270,6 +263,7 @@ def buscar_visita(request):
 
     return render(request, 'usuarios/registroSalida.html')
 
+#Registra la hora de salida de una visita y su vehiculo y/o equipos asociados
 @login_required
 def registrar_salida_visita(request):
     if request.method == 'POST':
@@ -299,6 +293,67 @@ def registrar_salida_visita(request):
             return render(request, 'usuarios/registrosSalidas.html', {'error': 'No se pudo registrar la salida.'})
 
     return redirect('buscar_visita')
-           
+
+
+# ============================
+# Vistas de error
+# ============================
+
+#Vista para mostrar error de conexión.
+@login_required
+def errorConexionIH(request):
+    return render(request, 'usuarios/errorConexion.html')
+
+
+#Vista para mostrar error al cerrar sesión.
+@login_required
+def errorCerrarIH(request):
+    return render(request, 'usuarios/errorCerrar.html')
+
+
+# ============================
+# Vistas a templates
+# ============================
+
+@login_required
+def opcionesRegistroIH(request):
+    return render(request, 'usuarios/opcionesRegistro.html')
+
+@login_required
+def registroEstudianteIH(request):
+    return render(request, 'usuarios/registroEstudiante.html')
+
+@login_required
+def registrosSalidasIH(request):
+    return render(request, 'usuarios/registrosSalidas.html')
+
+@login_required
+def registroVisitanteIH(request):
+    return render(request, 'usuarios/registroVisitante.html')
+
+
+
+@login_required
+def informacionDelCampusIH(request, campus_id):
+    campus = Campus.objects.get(pk=campus_id)
+    visitas = Visita.objects.filter(campus=campus)
+    vehiculos = Vehiculo.objects.filter(visita__in=visitas)
+    equipos = Equipo.objects.filter(visita__in=visitas)
+
+    contexto = {
+        'campus': campus,
+        'visitas': visitas,
+        'vehiculos': vehiculos,
+        'equipos': equipos,
+    }
+    return render(request, 'usuarios/informacionDelCampus.html', contexto)
+@login_required
+def seleccionDeCampusIH(request):
+    campus = Campus.objects.all()
+
+    contexto2 = {
+        'campus': campus
+    }
+    return render(request, 'usuarios/seleccionDeCampus.html',contexto2)
 
 # Create your views here.
