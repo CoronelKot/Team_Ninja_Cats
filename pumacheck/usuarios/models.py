@@ -1,7 +1,10 @@
 from django.db import models
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, PermissionsMixin
 
-#Creación de Administradores
+# --------------------------------------------------------
+# Modelo de gestor personalizado de usuarios (administradores y trabajadores)
+# --------------------------------------------------------
+
 class UsuarioManager(BaseUserManager):
     def create_user(self, correo, password=None, **extra_fields):
         if not correo:
@@ -21,6 +24,11 @@ class UsuarioManager(BaseUserManager):
         extra_fields.setdefault('is_superuser', True)
         extra_fields.setdefault('is_staff', True)
         return self.create_user(correo, password, **extra_fields)
+    
+
+# --------------------------------------------------------
+# Modelo de Usuario (trabajadores y administradores)
+# --------------------------------------------------------
 
 class Usuario(AbstractBaseUser, PermissionsMixin):
     nombre_completo = models.CharField(max_length=40)
@@ -45,7 +53,10 @@ class Usuario(AbstractBaseUser, PermissionsMixin):
         # Si no tiene un campus asignado, muestra solo el nombre completo
         return self.nombre_completo
     
-#Modelo Visita que puede ser estudiante o visitante
+# --------------------------------------------------------
+# Modelo de Visita (estudiantes y visitantes externos)
+# --------------------------------------------------------
+
 class Visita(models.Model):
     nombre = models.CharField(max_length=50)
     identificador = models.CharField(max_length=15)
@@ -54,7 +65,10 @@ class Visita(models.Model):
     horaSalida = models.DateTimeField(null=True, blank=True)
     campus = models.ForeignKey('Campus', on_delete=models.CASCADE, null=True)
 
-#Modelo Vehiculo que se relaciona con Visita
+# --------------------------------------------------------
+# Modelo de Vehículo asociado a una visita
+# --------------------------------------------------------
+
 class Vehiculo(models.Model):
     numPlaca = models.CharField(max_length=10)
     visita = models.ForeignKey(Visita, on_delete=models.CASCADE)
@@ -62,14 +76,20 @@ class Vehiculo(models.Model):
     horaSalida = models.DateTimeField(null=True,blank=True)
         
 
-#Modelo Equipo que se relaciona con Visita
+# --------------------------------------------------------
+# Modelo de Equipo electrónico asociado a una visita
+# --------------------------------------------------------
+
 class Equipo(models.Model):
     descripcion = models.CharField(max_length=100)
     horaEntrada = models.DateTimeField()
     horaSalida = models.DateTimeField(null=True,blank=True)
     visita = models.ForeignKey(Visita, on_delete=models.CASCADE)
         
-#Modelo Campus que se relaciona con Trabajador
+# --------------------------------------------------------
+# Modelo de Campus
+# --------------------------------------------------------
+
 class Campus(models.Model):
     nombreCampus = models.CharField(max_length=30)
     direccion = models.CharField(max_length=80)
