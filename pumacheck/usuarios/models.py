@@ -96,3 +96,13 @@ class Campus(models.Model):
     director = models.CharField(max_length=30)
     telefono = models.CharField(max_length=10)
     correo = models.EmailField(unique=True)
+
+# --------------------------------------------------------
+# Modelo de Ticket
+# --------------------------------------------------------
+
+class Ticket(models.Model):
+    identificador = models.CharField(max_length=12)
+    cambio = models.CharField(max_length=20)
+    actualizacion = models.CharField(max_length=20)
+    corregido = models.BooleanField(default=False)
