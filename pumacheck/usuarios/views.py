@@ -5,6 +5,8 @@ from django.http import JsonResponse
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required, user_passes_test
 from django.contrib import messages
+from django.shortcuts import get_object_or_404
+
 
 # ============================
 # Vistas públicas (login/logout)
@@ -338,12 +340,15 @@ def informacionDelCampusIH(request, campus_id):
     visitas = Visita.objects.filter(campus=campus)
     vehiculos = Vehiculo.objects.filter(visita__in=visitas)
     equipos = Equipo.objects.filter(visita__in=visitas)
+    es_trabajador = not request.user.es_admin
+
 
     contexto = {
         'campus': campus,
         'visitas': visitas,
         'vehiculos': vehiculos,
         'equipos': equipos,
+        'es_trabajador': es_trabajador,
     }
     return render(request, 'usuarios/informacionDelCampus.html', contexto)
 
@@ -364,7 +369,7 @@ def verTicketIH(request):
         ticket = get_object_or_404(Ticket, id=ticket_id)
         ticket.corregido = True
         ticket.save()
-        return redirect('verTicket')  # Redirige a sí misma
+        return redirect('verTicketIH')  # Redirige a sí misma
 
     tickets = Ticket.objects.filter(corregido=False)
     contexto = {
@@ -373,6 +378,10 @@ def verTicketIH(request):
     return render(request, 'usuarios/verTicket.html', contexto)
     
 #Vista para la generación de tickets.
+from django.shortcuts import redirect, render
+from django.contrib.auth.decorators import login_required
+from usuarios.models import Visita, Vehiculo, Equipo, Ticket
+
 @login_required
 def crearTicketIH(request, tipo, identificador):
     campus_id = request.GET.get('campus_id') or request.POST.get('campus_id')
@@ -397,7 +406,7 @@ def crearTicketIH(request, tipo, identificador):
             cambio=cambio,
             actualizacion=actualizacion
         )
-        return redirect('ticketIH', campus_id=request.POST.get('campus_id'))
+        return redirect('informacionDelCampus', campus_id=campus_id)
 
     contexto = {
         'tipo': tipo,

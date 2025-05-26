@@ -22,6 +22,6 @@ urlpatterns = [
     path('seleccionDeCampus/', seleccionDeCampusIH, name='seleccionDeCampus'),
     path('informacionDelCampus/<int:campus_id>/', informacionDelCampusIH, name='informacionDelCampus'),
     path('ticket/crear/<str:tipo>/<str:identificador>/', crearTicketIH, name='crearTicket'),
-path('ticket/<int:campus_id>/', verTicketIH, name='verTicketIH'),
+    path('verTicket/', verTicketIH, name='verTicketIH'),
 
 ]

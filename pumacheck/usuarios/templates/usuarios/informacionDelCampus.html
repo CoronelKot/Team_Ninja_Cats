@@ -23,7 +23,9 @@
 			            <td>{{ visita.identificador }}</td>
                         <td>{{ visita.horaEntrada }}</td>
                         <td>{{ visita.horaSalida }}</td>
+                        {% if es_trabajador %}
                         <td><a href="{% url 'crearTicket' 'visita' visita.identificador %}?campus_id={{ campus.id }}" class="btn btn-primary">Generar Ticket</a></td>
+                        {% endif %}
                     </tr>
                     {% endfor %}
 
@@ -34,7 +36,9 @@
 			            <td>{{ vehiculo.numPlaca }}</td>
                         <td>{{ vehiculo.horaEntrada }}</td>
                         <td>{{ vehiculo.horaSalida }}</td>
+                        {% if es_trabajador %}
                         <td><a href="{% url 'crearTicket' 'vehiculo' vehiculo.numPlaca %}?campus_id={{ campus.id }}" class="btn btn-primary">Generar Ticket</a></td>
+                        {% endif %}
                     </tr>
                     {% endfor %}
 
@@ -45,7 +49,9 @@
 			            <td>{{ equipo.descripcion }}</td>
                         <td>{{ equipo.horaEntrada }}</td>
                         <td>{{ equipo.horaSalida }}</td>
+                        {% if es_trabajador %}
                         <td><a href="{% url 'crearTicket' 'equipo' equipo.descripcion %}?campus_id={{ campus.id }}" class="btn btn-primary">Generar Ticket</a></td>
+                        {% endif %}
                     </tr>
                     {% endfor %}
                     

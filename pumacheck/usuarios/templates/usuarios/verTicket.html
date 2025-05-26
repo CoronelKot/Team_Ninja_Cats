@@ -20,7 +20,12 @@
                         <td>{{ ticket.cambio }}</td>
 			            <td>{{ ticket.actualizacion }}</td>
                         <td>
-                        <form method="post" action="{% url 'verTicket' %}">{% csrf_token %}<input type="hidden" name="ticket_id" value="{{ ticket.id }}"><button type="submit" class="btn btn-success">Hecho</button></form></td>
+                        <form method="post" action="{% url 'verTicketIH' %}">
+                            {% csrf_token %}
+                            <input type="hidden" name="ticket_id" value="{{ ticket.id }}">
+                            <button type="submit" class="btn btn-success">Hecho</button>
+                        </form>
+                        </td>
                     </tr>
                     {% endfor %}
 
