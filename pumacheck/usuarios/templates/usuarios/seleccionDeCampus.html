@@ -1,0 +1,33 @@
+{% extends 'usuarios/base.html' %}
+
+{% block content %}
+    <!-- Contenido principal -->
+    <div class="d-flex justify-content-center align-items-center vh-50">
+        <div class="card p-4 shadow-lg" style="width: 900px;">
+            <h2 class="text-center mb-4">Selección de Campus</h2>
+            <table = class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>Nombre</th>
+                        <th>Dirección</th>
+                        <th>Director</th>
+                        <th>Telefono</th>
+                        <th>Correo</th>
+                    </tr>    
+                </thead>
+                <tbody>
+                    <tr>
+                    {% for campus in campus %}
+                    <tr>
+                        <td><a href="{% url 'informacionDelCampus' campus.id %}" class="btn btn-primary">{{ campus.nombreCampus }}</a></td>
+                        <td>{{ campus.direccion }}</td>
+                        <td>{{ campus.director }}</td>
+			            <td>{{ campus.telefono }}</td>
+                        <td>{{ campus.correo }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+    </form>
+    </div>
+{% endblock %}
