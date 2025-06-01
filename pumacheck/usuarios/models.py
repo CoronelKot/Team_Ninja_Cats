@@ -96,3 +96,6 @@ class Campus(models.Model):
     director = models.CharField(max_length=30)
     telefono = models.CharField(max_length=10)
     correo = models.EmailField(unique=True)
+
+    def __str__(self):
+        return self.nombreCampus

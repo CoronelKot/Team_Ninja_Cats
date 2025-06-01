@@ -43,25 +43,46 @@
                 {% csrf_token %}
                 {% if messages %}
                     {% for message in messages %}
-                        {% if message.tags == 'error' %}
-                            <p style="color: red; font-weight: bold;">*{{ message }}</p>
-                        {% elif message.tags == 'success' %}
-                            <p style="color: green; font-weight: bold;">{{ message }}</p>
+                        {% if message.tags == 'success' %}
+                            <p style="color: green; font-weight: bold;">*{{ message }}</p>
                         {% endif %}
                     {% endfor %}
                 {% endif %}
+                {% if form.non_field_errors %}
+                <div class="alert alert-danger">
+                    {% for error in form.non_field_errors %}
+                        <p>{{ error }}</p>
+                    {% endfor %}
+                </div>
+            {% endif %}
+       
+                <!--Campo Nombre-->
                 <div class="mb-0">
                     <label for="nombre" class="form-label">Nombre</label>
-                    <input type="text" class="form-control" id="nombre" name="nombre" required>
+                    <input type="text" class="form-control {% if form.nombre.errors %}is-invalid{% endif %}" id="nombre" name="nombre" value="{{ form.nombre.value|default_if_none:'' }}" required pattern="[A-Za-zÁÉÍÓÚáéíóúÑñ\s]+" title="Solo se permiten letras y espacios">
+                    {% if form.nombre.errors %}
+                         <div class="invalid-feedback">
+                         {{ form.nombre.errors.0 }}
+                         </div>
+                  {% endif %}
                 </div>
+                <!--Campo Apellidos-->
                 <div class="mb-0">
                     <label for="apellidos" class="form-label">Apellidos</label>
-                    <input type="text" class="form-control" id="apellidos" name="apellidos" required>
+                    <input type="text" class="form-control" id="apellidos" name="apellidos" required pattern="[A-Za-zÁÉÍÓÚáéíóúÑñ\s]+" title="Solo se permiten letras y espacios">
+                    {% if form.apellidos.errors %}
+                        <p style="color: red; font-weight: bold;">{{ form.apellidos.errors.0 }}</p>
+                    {% endif %}
                 </div>
+                <!--Campo teléfono-->
                 <div class="mb-0">
                     <label for="telefono" class="form-label">Teléfono</label>
                     <input type="tel" class="form-control" id="telefono" name="telefono" required>
+                    {% if form.telefono.errors %}
+                        <p style="color: red; font-weight: bold;">{{ form.telefono.errors.0 }}</p>
+                    {% endif %}
                 </div>
+                <!--Campo Campus-->
                 <div class="mb-0">
                     <label for="campus" class="form-label">Campus</label>
                     <select class="form-select" id="campus" name="campus" required>
@@ -71,17 +92,28 @@
                         {% endfor %}
                     </select>
                 </div>
+                <!--Campo Correo-->
                 <div class="mb-0">
                     <label for="correo" class="form-label">Correo</label>
                     <input type="email" class="form-control" id="correo" name="correo" required>
+                    {% if form.correo.errors %}
+                        <p style="color: red; font-weight: bold;">{{ form.correo.errors.0 }}</p>
+                    {% endif %}
                 </div>
+                <!--Campo Contraseña-->
                 <div class="mb-0">
                     <label for="contrasena" class="form-label">Contraseña</label>
                     <input type="password" class="form-control" id="contrasena" name="contrasena" required>
                 </div>
+                <!--Campo Confirmar Contraseña-->
                 <div class="mb-0">
                     <label for="confirmar_contrasena" class="form-label">Confirmar contraseña</label>
                     <input type="password" class="form-control" id="confirmar_contrasena" name="confirmar_contrasena" required>
+                    {% if form.confirmar_contrasena.errors %}
+                        <div class="invalid-feedback">
+                           {{ form.confirmar_contrasena.errors.0 }}
+                        </div>
+                    {% endif %}
                 </div>
                 <button type="submit" class="btn btn-primary w-50 mt-3">Crear cuenta</button>
             </form>

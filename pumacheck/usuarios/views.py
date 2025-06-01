@@ -6,6 +6,7 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required, user_passes_test
 from django.contrib import messages
 from usuarios.models import Campus
+from .forms import CrearCuentaForm
 
 # ============================
 # Vistas públicas (login/logout)
@@ -77,7 +78,6 @@ def inicioTrabajadorIH(request):
 @login_required
 def crearCuentaIH(request):
     campus_disponibles = Campus.objects.all()
-
     contexto = {
         'campus_disponibles': campus_disponibles
     }
@@ -88,41 +88,41 @@ def crearCuentaIH(request):
 @login_required
 def crear_trabajador(request):
     if request.method == 'POST':
-        print("Formulario recibido")
-        nombre = request.POST.get('nombre')
-        apellidos = request.POST.get('apellidos')
-        telefono = request.POST.get('telefono')
-        correo = request.POST.get('correo')
-        password = request.POST.get('contrasena')
-        confirmar = request.POST.get('confirmar_contrasena')
-        campus_id = request.POST.get('campus')
+        form = CrearCuentaForm(request.POST)
+        if form.is_valid():
+            nombre = form.cleaned_data['nombre']
+            apellidos = form.cleaned_data['apellidos']
+            telefono = form.cleaned_data['telefono']
+            correo = form.cleaned_data['correo']
+            contrasena = form.cleaned_data['contrasena']
+            campus_id = form.cleaned_data['campus']
 
-        if Usuario.objects.filter(correo=correo).exists():
-            messages.error(request, "El correo ya está registrado.")
-            return redirect('crear_trabajador')
-        
-        if password != confirmar:
-            messages.error(request, 'Las contraseñas no coinciden.')
+            if Usuario.objects.filter(correo=correo).exists():
+                messages.error(request, "El correo ya está registrado.")
+                return redirect('crear_trabajador')
+
+            nombre_completo = f"{nombre} {apellidos}"
+            campus = Campus.objects.get(id=campus_id) if campus_id else None
+
+            Usuario.objects.create_user(
+                correo=correo,
+                password=contrasena,
+                nombre_completo=nombre_completo,
+                telefono=telefono,
+                es_admin=False,
+                is_staff=False,
+                is_superuser=False,
+                campus=campus
+            )
+            messages.success(request, "Registro exitoso.")
             return redirect('crearCuenta')
-        
-        nombre_completo = f"{nombre} {apellidos}"
-
-        campus = Campus.objects.get(id=campus_id) if campus_id else None
-
-        Usuario.objects.create_user(
-            correo=correo,
-            password=password,
-            nombre_completo=nombre_completo,
-            telefono=telefono,
-            es_admin=False,
-            is_staff=False,
-            is_superuser=False,
-            campus=campus
-        )
-        messages.success(request, "Registro exitoso.")
-        return redirect('crearCuenta') 
-
-    return redirect('inicioAdministrador')
+        else:
+            campus_disponibles = Campus.objects.all()
+            return render(request, 'usuarios/crearCuenta.html', {'form': form})
+    else:
+        form = CrearCuentaForm()
+        campus_disponibles = Campus.objects.all()
+        return render(request, 'usuarios/crearCuenta.html', {'form': form})
 
 
 # Solo permite acceso si el usuario actual es superusuario de Django
