@@ -1,11 +1,11 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.utils import timezone
 from .models import Visita, Vehiculo, Equipo, Usuario,Campus
 from django.http import JsonResponse
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required, user_passes_test
 from django.contrib import messages
-from usuarios.models import Campus
+#from usuarios.models import Campus
 
 # ============================
 # Vistas públicas (login/logout)
@@ -355,5 +355,62 @@ def seleccionDeCampusIH(request):
         'campus': campus
     }
     return render(request, 'usuarios/seleccionDeCampus.html',contexto2)
+
+
+@login_required
+def listaCampusIH(request):
+    campus_list = Campus.objects.all()
+    return render(request, 'usuarios/listaCampus.html', {
+        'campus_list': campus_list
+    })
+
+
+@login_required
+def visitas_por_campus(request, campus_id):
+    campus = get_object_or_404(Campus, id=campus_id)
+    visitas = Visita.objects.filter(campus=campus)
+    return render(request, 'usuarios/visitasCampus.html', {
+        'campus': campus,
+        'visitas': visitas
+    })
+
+
+def editar_visita(request):
+    if request.method == "POST":
+        visita_id = request.POST.get('visita_id')
+        nombre = request.POST.get('nombre')
+        identificador = request.POST.get('identificador')
+        tipo = request.POST.get('tipo')
+        vehiculo_desc = request.POST.get('vehiculo')
+        equipo_desc = request.POST.get('equipo')
+
+        try:
+            visita = Visita.objects.get(id=visita_id)
+            visita.nombre = nombre
+            visita.identificador = identificador
+            visita.tipo = tipo
+
+            # Actualizar o crear Vehiculo
+            if vehiculo_desc:
+                vehiculo, _ = Vehiculo.objects.get_or_create(visita=visita)
+                vehiculo.descripcion = vehiculo_desc
+                vehiculo.save()
+            else:
+                Vehiculo.objects.filter(visita=visita).delete()
+
+            # Actualizar o crear Equipo
+            if equipo_desc:
+                equipo, _ = Equipo.objects.get_or_create(visita=visita)
+                equipo.descripcion = equipo_desc
+                equipo.save()
+            else:
+                Equipo.objects.filter(visita=visita).delete()
+
+            visita.save()
+            return JsonResponse({'success': True, 'mensaje': 'Visita actualizada correctamente'})
+        except Visita.DoesNotExist:
+            return JsonResponse({'success': False, 'mensaje': 'Visita no encontrada'})
+    return JsonResponse({'success': False, 'mensaje': 'Solicitud no válida'})
+
 
 # Create your views here.
