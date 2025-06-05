@@ -249,6 +249,7 @@ def registrar_visita_visitante(request):
 # ============================
 
 #Busca una visita que no tenga la salida registrada
+@login_required
 def buscar_visita(request):
     if request.method == 'POST':
         tipo = request.POST.get('tipo')
@@ -355,5 +356,14 @@ def seleccionDeCampusIH(request):
         'campus': campus
     }
     return render(request, 'usuarios/seleccionDeCampus.html',contexto2)
+
+@login_required
+def verPerfilIH(request):
+    usuario = request.user  # Obtén el usuario logueado
+    return render(request, 'usuarios/verPerfil.html', {'usuario': usuario})
+
+@login_required
+def modificarPerfilIH(request):
+    return render(request, 'usuarios/modificarPerfil.html')
 
 # Create your views here.
