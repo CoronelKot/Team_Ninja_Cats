@@ -38,20 +38,40 @@
     <div class="container profile-container mt-5">
         <form method="post" action="{% url 'guardar_cambios_perfil' %}">
             {% csrf_token %}
-                        {% if messages %}
-                <div class="alert alert-info">
-                    {% for message in messages %}
-                        <p>{{ message }}</p>
-                    {% endfor %}
-                </div>
+
+             {% if messages %}
+                {% for message in messages %}
+                    {% if message.tags == 'success' %}
+                        <p style="color: green; font-weight: bold;">*{{ message }}</p>
+                    {% endif %}
+                {% endfor %}
+             {% endif %}
+
+            {% if form.non_field_errors %}
+                 <div class="alert alert-danger">
+                 {% for error in form.non_field_errors %}
+                     <p>{{ error }}</p>
+                 {% endfor %}
+                 </div>
             {% endif %}
+
             <div class="row">
                 <div class="col-md-6 profile-info mt-3">
-                    <label for="nombre"><strong>Nombre:</strong></label>
-                    <input type="text" id="nombre" name="nombre" class="form-control" value="{{ usuario.nombre_completo }}">
+                    <label for="{{ form.nombre.id_for_label }}"><strong>Nombre:</strong></label>
+                    {{ form.nombre }}
+                     {% if form.nombre.errors %}
+                        <div class="invalid-feedback d-block">
+                         {{ form.nombre.errors.0 }}
+                       </div>
+                    {% endif %}
                     <br>
-                    <label for="telefono"><strong>Teléfono:</strong></label>
-                    <input type="text" id="telefono" name="telefono" class="form-control" value="{{ usuario.telefono }}">
+                    <label for="{{ form.telefono.id_for_label }}"><strong>Teléfono:</strong></label>
+                      {{ form.telefono }}
+                     {% if form.telefono.errors %}
+                          <div class="invalid-feedback d-block">
+                             {{ form.telefono.errors.0 }}
+                           </div>
+                     {% endif %}
                     <br>
                     <label for="campus" class="form-label">Campus</label>
                     <select class="form-select" id="campus" name="campus" required>
@@ -61,8 +81,13 @@
                         {% endfor %}
                     </select>
                     <br>
-                    <label for="correo"><strong>Correo:</strong></label>
-                    <input type="email" id="correo" name="correo" class="form-control" value="{{ usuario.correo }}">
+                    <label for="{{ form.correo.id_for_label }}"><strong>Correo:</strong></label>
+                    {{ form.correo }}
+                       {% if form.correo.errors %}
+                          <div class="invalid-feedback d-block">
+                             {{ form.correo.errors.0 }}
+                          </div>
+                       {% endif %}
                     <br>
                     <button type="button" style="background-color: grey;" class="btn btn-primary mb-3" data-bs-toggle="modal" data-bs-target="#modalCambiarContraseña">
                         Cambiar contraseña

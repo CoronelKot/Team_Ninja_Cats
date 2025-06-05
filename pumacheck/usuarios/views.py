@@ -7,6 +7,7 @@ from django.contrib.auth.decorators import login_required, user_passes_test
 from django.contrib import messages
 from usuarios.models import Campus
 from .forms import CrearCuentaForm
+from .forms2 import UsuarioForm
 from django.contrib.auth import update_session_auth_hash
 
 # ============================
@@ -366,14 +367,26 @@ def verPerfilIH(request):
 @login_required
 def modificarPerfilIH(request):
     usuario = request.user  
-    campus_disponibles = Campus.objects.all()  
+    campus_disponibles = Campus.objects.all() 
+
+    if request.method == 'POST':
+        form = UsuarioForm(request.POST, instance=usuario)
+        if form.is_valid():
+            form.save()
+            # Redireccionar a donde desees o mostrar un mensaje de éxito
+            messages.success(request, "¡Perfil actualizado con éxito!")
+            return redirect('verPerfil') 
+    else:
+        form = UsuarioForm(instance=usuario)
 
     contexto = {
         'usuario': usuario,
-        'campus_disponibles': campus_disponibles
+        'campus_disponibles': campus_disponibles,
+        'form': form
     }
 
     return render(request, 'usuarios/modificarPerfil.html', contexto)
+
 
 @login_required
 def modificar_contraseña(request):
