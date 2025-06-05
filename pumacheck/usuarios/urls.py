@@ -1,5 +1,5 @@
 from django.urls import path
-from .views import opcionesRegistroIH, registroEstudianteIH, registroVisitanteIH, registrosSalidasIH, registrar_visita, buscar_visita, registrar_salida_visita, registrar_visita_visitante, inicioSistemaIH, inicioAdministradorIH, inicioTrabajadorIH, crearCuentaIH, errorConexionIH, errorCerrarIH, login_view, crear_trabajador, logout_view,informacionDelCampusIH,seleccionDeCampusIH, verPerfilIH, modificarPerfilIH
+from .views import opcionesRegistroIH, registroEstudianteIH, registroVisitanteIH, registrosSalidasIH, registrar_visita, buscar_visita, registrar_salida_visita, registrar_visita_visitante, inicioSistemaIH, inicioAdministradorIH, inicioTrabajadorIH, crearCuentaIH, errorConexionIH, errorCerrarIH, login_view, crear_trabajador, logout_view,informacionDelCampusIH,seleccionDeCampusIH, verPerfilIH, modificarPerfilIH, guardar_cambios_perfil, modificar_contraseña
 
 urlpatterns = [
     path('opcionesRegistro/', opcionesRegistroIH, name='opcionesRegistro'),
@@ -23,4 +23,6 @@ urlpatterns = [
     path('informacionDelCampus/<int:campus_id>/', informacionDelCampusIH, name='informacionDelCampus'),
     path('verPerfil/', verPerfilIH, name='verPerfil'),
     path('modificarPerfil/', modificarPerfilIH, name='modificarPerfil'),
+    path('guardar_cambios_perfil/', guardar_cambios_perfil, name='guardar_cambios_perfil'),
+    path('modificar_contraseña/', modificar_contraseña, name='modificar_contraseña'),
 ]

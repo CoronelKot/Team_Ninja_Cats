@@ -7,6 +7,7 @@ from django.contrib.auth.decorators import login_required, user_passes_test
 from django.contrib import messages
 from usuarios.models import Campus
 from .forms import CrearCuentaForm
+from django.contrib.auth import update_session_auth_hash
 
 # ============================
 # Vistas públicas (login/logout)
@@ -359,11 +360,60 @@ def seleccionDeCampusIH(request):
 
 @login_required
 def verPerfilIH(request):
-    usuario = request.user  # Obtén el usuario logueado
+    usuario = request.user  # Obtén el usuario logueado para cuando se hace la modificación de la ocntraseña
     return render(request, 'usuarios/verPerfil.html', {'usuario': usuario})
 
 @login_required
 def modificarPerfilIH(request):
-    return render(request, 'usuarios/modificarPerfil.html')
+    usuario = request.user  
+    campus_disponibles = Campus.objects.all()  
+
+    contexto = {
+        'usuario': usuario,
+        'campus_disponibles': campus_disponibles
+    }
+
+    return render(request, 'usuarios/modificarPerfil.html', contexto)
+
+@login_required
+def modificar_contraseña(request):
+    if request.method == 'POST':
+        usuario = request.user
+        contraseña_actual = request.POST.get('contraseña_actual')
+        nueva_contraseña = request.POST.get('nueva_contraseña')
+        confirmar_contraseña = request.POST.get('confirmar_contraseña')
+
+        # Verificar la contraseña actual
+        if not usuario.check_password(contraseña_actual):
+            messages.error(request, "La contraseña actual es incorrecta.")
+            return redirect('modificarPerfil')
+
+        # Verificar que las nuevas contraseñas coincidan
+        if nueva_contraseña != confirmar_contraseña:
+            messages.error(request, "Las nuevas contraseñas no coinciden.")
+            return redirect('modificarPerfil')
+
+        # Cambiar la contraseña
+        usuario.set_password(nueva_contraseña)
+        usuario.save()
+
+        # Actualizar la sesión para evitar logout
+        update_session_auth_hash(request, usuario)
+
+        messages.success(request, "La contraseña ha sido cambiada exitosamente.")
+        return redirect('modificarPerfil')
+
+@login_required
+def guardar_cambios_perfil(request):
+    if request.method == 'POST':
+        usuario = request.user
+        usuario.nombre_completo = request.POST.get('nombre')
+        usuario.telefono = request.POST.get('telefono')
+        usuario.campus = request.POST.get('campus')
+        usuario.correo = request.POST.get('correo')
+        usuario.save()
+        messages.success(request, 'Perfil actualizado exitosamente.')
+        return redirect('verPerfil')
+    return redirect('modificarPerfil')
 
 # Create your views here.
