@@ -406,14 +406,19 @@ def modificar_contraseña(request):
 @login_required
 def guardar_cambios_perfil(request):
     if request.method == 'POST':
-        usuario = request.user
-        usuario.nombre_completo = request.POST.get('nombre')
-        usuario.telefono = request.POST.get('telefono')
-        usuario.campus = request.POST.get('campus')
-        usuario.correo = request.POST.get('correo')
-        usuario.save()
-        messages.success(request, 'Perfil actualizado exitosamente.')
-        return redirect('verPerfil')
+        form = CrearCuentaForm(request.POST)
+        if form.is_valid():
+            usuario = request.user
+            usuario.nombre_completo = f"{form.cleaned_data['nombre']} {form.cleaned_data['apellidos']}"
+            usuario.telefono = form.cleaned_data['telefono']
+            usuario.correo = form.cleaned_data['correo']
+            usuario.campus = form.cleaned_data['campus']
+            usuario.save()
+            messages.success(request, 'Perfil actualizado exitosamente.')
+            return redirect('verPerfil')
+        else:
+            messages.error(request, 'Por favor corrige los errores en el formulario.')
+            return render(request, 'usuarios/modificarPerfil.html', {'form': form, 'usuario': request.user})
     return redirect('modificarPerfil')
 
 # Create your views here.

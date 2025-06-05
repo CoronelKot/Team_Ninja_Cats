@@ -1,5 +1,5 @@
 from django import forms
-from usuarios.models import Usuario
+from usuarios.models import Usuario, Campus
 import re
 
 class CrearCuentaForm(forms.Form):
@@ -9,7 +9,7 @@ class CrearCuentaForm(forms.Form):
     correo = forms.EmailField(required=True)
     contrasena = forms.CharField(widget=forms.PasswordInput, required=True)
     confirmar_contrasena = forms.CharField(widget=forms.PasswordInput, required=True)
-    campus = forms.IntegerField(required=True)
+    campus = forms.ModelChoiceField(queryset=Campus.objects.all(), required=True)
 
     def clean_nombre(self):
         nombre = self.cleaned_data.get('nombre')
@@ -53,4 +53,3 @@ class CrearCuentaForm(forms.Form):
             raise forms.ValidationError("Las contraseñas no coinciden.")
 
         return cleaned_data
-    
