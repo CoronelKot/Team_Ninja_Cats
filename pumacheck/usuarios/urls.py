@@ -1,5 +1,5 @@
 from django.urls import path
-from .views import opcionesRegistroIH, registroEstudianteIH, registroVisitanteIH, registrosSalidasIH, registrar_visita, buscar_visita, registrar_salida_visita, registrar_visita_visitante, inicioSistemaIH, inicioAdministradorIH, inicioTrabajadorIH, crearCuentaIH, errorConexionIH, errorCerrarIH, login_view, crear_trabajador, logout_view,informacionDelCampusIH,seleccionDeCampusIH, listaCampusIH, visitas_por_campus, editar_visita
+from .views import opcionesRegistroIH, registroEstudianteIH, registroVisitanteIH, registrosSalidasIH, registrar_visita, buscar_visita, registrar_salida_visita, registrar_visita_visitante, inicioSistemaIH, inicioAdministradorIH, inicioTrabajadorIH, crearCuentaIH, errorConexionIH, errorCerrarIH, login_view, crear_trabajador, logout_view,informacionDelCampusIH,seleccionDeCampusIH, listaCampusIH, visitas_por_campus, editar_visita, get_visita_data
 
 urlpatterns = [
     path('opcionesRegistro/', opcionesRegistroIH, name='opcionesRegistro'),
@@ -23,5 +23,6 @@ urlpatterns = [
     path('informacionDelCampus/<int:campus_id>/', informacionDelCampusIH, name='informacionDelCampus'),
     path('listaCampus/', listaCampusIH, name='listaCampus'),
     path('campus/<int:campus_id>/visitas/', visitas_por_campus, name='visitas_por_campus'),
-    path('visita/<int:visita_id>/actualizar/', editar_visita, name='actualizar_visita'),
+    path('visita/<int:visita_id>/actualizar/', editar_visita, name='editar_visita'),
+    path('get_visita_data/<int:visita_id>/', get_visita_data, name='get_visita_data'),
 ]

@@ -368,49 +368,101 @@ def listaCampusIH(request):
 @login_required
 def visitas_por_campus(request, campus_id):
     campus = get_object_or_404(Campus, id=campus_id)
-    visitas = Visita.objects.filter(campus=campus)
+    datos_visitas = Visita.objects.filter(campus=campus)
     return render(request, 'usuarios/visitasCampus.html', {
         'campus': campus,
-        'visitas': visitas
+        'datos_visitas': datos_visitas
     })
 
 
-def editar_visita(request):
-    if request.method == "POST":
+
+def editar_visita(request, visita_id):
+    if request.method == "GET":
+        try:
+            visita = Visita.objects.get(id=visita_id)
+            vehiculo = Vehiculo.objects.filter(visita=visita).first()
+            equipo = Equipo.objects.filter(visita=visita).first()
+
+            return JsonResponse({
+                'success': True,
+                'visita': {
+                    'id': visita.id,
+                    'nombre': visita.nombre,
+                    'identificador': visita.identificador,
+                    'tipo': visita.tipo,
+                    'vehiculo': vehiculo.numPlaca if vehiculo else '',
+                    'equipo': equipo.descripcion if equipo else '',
+                }
+            })
+        except Visita.DoesNotExist:
+            return JsonResponse({'success': False, 'mensaje': 'Visita no encontrada'})
+
+    elif request.method == "POST":
         visita_id = request.POST.get('visita_id')
         nombre = request.POST.get('nombre')
         identificador = request.POST.get('identificador')
         tipo = request.POST.get('tipo')
-        vehiculo_desc = request.POST.get('vehiculo')
-        equipo_desc = request.POST.get('equipo')
+        vehiculo_input = request.POST.get('vehiculo')
+        equipo_input = request.POST.get('equipo')
 
         try:
             visita = Visita.objects.get(id=visita_id)
             visita.nombre = nombre
             visita.identificador = identificador
             visita.tipo = tipo
+            visita.save()
 
-            # Actualizar o crear Vehiculo
-            if vehiculo_desc:
-                vehiculo, _ = Vehiculo.objects.get_or_create(visita=visita)
-                vehiculo.descripcion = vehiculo_desc
+            # Vehículo
+            if vehiculo_input != 'No hay':
+                vehiculo, created = Vehiculo.objects.get_or_create(
+                    visita=visita,
+                    defaults={
+                        'horaEntrada': visita.horaEntrada,
+                        'numPlaca': vehiculo_input
+                            }
+                    )
                 vehiculo.save()
             else:
                 Vehiculo.objects.filter(visita=visita).delete()
 
-            # Actualizar o crear Equipo
-            if equipo_desc:
-                equipo, _ = Equipo.objects.get_or_create(visita=visita)
-                equipo.descripcion = equipo_desc
+            # Equipo
+            if equipo_input != 'No hay':
+                equipo, created = Equipo.objects.get_or_create(
+                    visita=visita,
+                    defaults={
+                        'horaEntrada': visita.horaEntrada,
+                        'descripcion': equipo_input
+                            }
+                    )
                 equipo.save()
             else:
                 Equipo.objects.filter(visita=visita).delete()
 
-            visita.save()
             return JsonResponse({'success': True, 'mensaje': 'Visita actualizada correctamente'})
+
         except Visita.DoesNotExist:
             return JsonResponse({'success': False, 'mensaje': 'Visita no encontrada'})
+
     return JsonResponse({'success': False, 'mensaje': 'Solicitud no válida'})
+
+def get_visita_data(request, visita_id):
+    try:
+        visita = Visita.objects.get(id=visita_id)
+        vehiculo = Vehiculo.objects.filter(visita=visita).first()
+        equipo = Equipo.objects.filter(visita=visita).first()
+
+        data = {
+            'id': visita.id,
+            'nombre': visita.nombre,
+            'identificador': visita.identificador,
+            'tipo': visita.tipo,
+            'vehiculo': vehiculo.numPlaca if vehiculo else 'No hay',
+            'equipo': equipo.descripcion if equipo else 'No hay',
+        }
+        return JsonResponse(data)
+    except Visita.DoesNotExist:
+        return JsonResponse({'error': 'Visita no encontrada'}, status=404)
+
 
 
 # Create your views here.

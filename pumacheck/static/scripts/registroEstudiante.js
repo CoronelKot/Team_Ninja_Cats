@@ -50,6 +50,7 @@ document.addEventListener('DOMContentLoaded', () => {
         let errores = [];
 
         // Validar número de cuenta
+
         const numCuenta = numCuentaInput.value.trim();
         if (!/^\d{9}$/.test(numCuenta)) {
             errores.push("El número de cuenta debe tener exactamente 9 dígitos.");
