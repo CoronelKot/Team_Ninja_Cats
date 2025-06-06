@@ -38,56 +38,67 @@
     <div class="container profile-container mt-5">
         <form method="post" action="{% url 'guardar_cambios_perfil' %}">
             {% csrf_token %}
-
-             {% if messages %}
-                {% for message in messages %}
-                    {% if message.tags == 'success' %}
-                        <p style="color: green; font-weight: bold;">*{{ message }}</p>
-                    {% endif %}
-                {% endfor %}
-             {% endif %}
-
-            {% if form.non_field_errors %}
-                 <div class="alert alert-danger">
-                 {% for error in form.non_field_errors %}
-                     <p>{{ error }}</p>
-                 {% endfor %}
-                 </div>
+            {% if messages %}
+                    {% for message in messages %}
+                        {% if message.tags == 'success' %}
+                            <p style="color: green; font-weight: bold;">*{{ message }}</p>
+                        {% endif %}
+                    {% endfor %}
+                {% endif %}
+                {% if form.non_field_errors %}
+                <div class="alert alert-danger">
+                    {% for error in form.non_field_errors %}
+                        <p>{{ error }}</p>
+                    {% endfor %}
+                </div>
             {% endif %}
-
             <div class="row">
                 <div class="col-md-6 profile-info mt-3">
-                    <label for="{{ form.nombre.id_for_label }}"><strong>Nombre:</strong></label>
-                    {{ form.nombre }}
-                     {% if form.nombre.errors %}
+                    <label for="nombre"><strong>Nombre:</strong></label>
+                    <input type="text" id="nombre" name="nombre" class="form-control" value="{{ form.nombre.value }}">
+                    {% if form.nombre.errors %}
                         <div class="invalid-feedback d-block">
-                         {{ form.nombre.errors.0 }}
-                       </div>
+                            {{ form.nombre.errors.0 }}
+                        </div>
                     {% endif %}
                     <br>
-                    <label for="{{ form.telefono.id_for_label }}"><strong>Teléfono:</strong></label>
-                      {{ form.telefono }}
-                     {% if form.telefono.errors %}
-                          <div class="invalid-feedback d-block">
-                             {{ form.telefono.errors.0 }}
-                           </div>
-                     {% endif %}
+
+                    <label for="apellidos"><strong>Apellidos:</strong></label>
+                    <input type="text" id="apellidos" name="apellidos" class="form-control" value="{{ form.apellidos.value }}">
+                    {% if form.apellidos.errors %}
+                        <div class="invalid-feedback d-block">
+                            {{ form.apellidos.errors.0 }}
+                        </div>
+                    {% endif %}
+                    <br>
+                    <label for="telefono"><strong>Teléfono:</strong></label>
+                    <input type="text" id="telefono" name="telefono" class="form-control" value="{{ form.telefono.value }}">
+                    {% if form.telefono.errors %}
+                        <div class="invalid-feedback d-block">
+                            {{ form.telefono.errors.0 }}
+                        </div>
+                    {% endif %}
                     <br>
                     <label for="campus" class="form-label">Campus</label>
                     <select class="form-select" id="campus" name="campus" required>
                         <option value="">Selecciona un campus</option>
                         {% for c in campus_disponibles %}
-                            <option value="{{ c.id }}">{{ c.nombreCampus }}</option>
+                            <option value="{{ c.id }}" {% if form.campus.value == c.id %}selected{% endif %}>{{ c.nombreCampus }}</option>
                         {% endfor %}
                     </select>
+                    {% if form.campus.errors %}
+                        <div class="invalid-feedback d-block">
+                            {{ form.campus.errors.0 }}
+                        </div>
+                    {% endif %}
                     <br>
-                    <label for="{{ form.correo.id_for_label }}"><strong>Correo:</strong></label>
-                    {{ form.correo }}
-                       {% if form.correo.errors %}
-                          <div class="invalid-feedback d-block">
-                             {{ form.correo.errors.0 }}
-                          </div>
-                       {% endif %}
+                    <label for="correo"><strong>Correo:</strong></label>
+                    <input type="email" id="correo" name="correo" class="form-control" value="{{ form.correo.value }}">
+                    {% if form.correo.errors %}
+                        <div class="invalid-feedback d-block">
+                            {{ form.correo.errors.0 }}
+                        </div>
+                    {% endif %}
                     <br>
                     <button type="button" style="background-color: grey;" class="btn btn-primary mb-3" data-bs-toggle="modal" data-bs-target="#modalCambiarContraseña">
                         Cambiar contraseña

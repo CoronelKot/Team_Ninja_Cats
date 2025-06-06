@@ -6,8 +6,8 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required, user_passes_test
 from django.contrib import messages
 from .forms import CrearCuentaForm
-from .forms2 import UsuarioForm
 from django.contrib.auth import update_session_auth_hash
+from .forms_modificar_perfil import ModificarPerfilForm
 
 # ============================
 # Vistas públicas (login/logout)
@@ -379,27 +379,46 @@ def verPerfilIH(request):
 
 @login_required
 def modificarPerfilIH(request):
-    usuario = request.user  
-    campus_disponibles = Campus.objects.all() 
+    usuario = request.user
+    campus_disponibles = Campus.objects.all()
 
     if request.method == 'POST':
-        form = UsuarioForm(request.POST, instance=usuario)
+        form = ModificarPerfilForm(request.POST, usuario_actual=usuario)
         if form.is_valid():
-            form.save()
-            # Redireccionar a donde desees o mostrar un mensaje de éxito
-            messages.success(request, "¡Perfil actualizado con éxito!")
-            return redirect('verPerfil') 
-    else:
-        form = UsuarioForm(instance=usuario)
+            nombre = form.cleaned_data.get('nombre', usuario.nombre_completo.split()[0])
+            apellidos = form.cleaned_data.get('apellidos', ' '.join(usuario.nombre_completo.split()[1:]))
+            telefono = form.cleaned_data.get('telefono', usuario.telefono)
+            campus_id = form.cleaned_data.get('campus')
+            correo = form.cleaned_data.get('correo', usuario.correo)
 
-    contexto = {
+            usuario.nombre_completo = f"{nombre} {apellidos}"
+            usuario.telefono = telefono or usuario.telefono
+            usuario.correo = correo or usuario.correo
+
+            # Obtener la instancia del campus si se proporciona un ID
+            if campus_id:
+                usuario.campus = Campus.objects.get(id=campus_id)
+
+            usuario.save()
+
+            messages.success(request, "Perfil actualizado correctamente.")
+            return redirect('verPerfil')
+        else:
+            messages.error(request, "Por favor corrige los errores en el formulario.")
+    else:
+        form = ModificarPerfilForm(initial={
+            'nombre': usuario.nombre_completo.split()[0],
+            'apellidos': ' '.join(usuario.nombre_completo.split()[1:]),
+            'telefono': usuario.telefono,
+            'correo': usuario.correo,
+            'campus': usuario.campus.id if usuario.campus else None,
+        }, usuario_actual=usuario)
+
+    return render(request, 'usuarios/modificarPerfil.html', {
         'usuario': usuario,
         'campus_disponibles': campus_disponibles,
-        'form': form
-    }
-
-    return render(request, 'usuarios/modificarPerfil.html', contexto)
-
+        'form': form,
+    })
 
 @login_required
 def modificar_contraseña(request):
@@ -432,19 +451,33 @@ def modificar_contraseña(request):
 @login_required
 def guardar_cambios_perfil(request):
     if request.method == 'POST':
-        form = CrearCuentaForm(request.POST)
+        form = ModificarPerfilForm(request.POST, usuario_actual=request.user)
         if form.is_valid():
             usuario = request.user
-            usuario.nombre_completo = f"{form.cleaned_data['nombre']} {form.cleaned_data['apellidos']}"
-            usuario.telefono = form.cleaned_data['telefono']
-            usuario.correo = form.cleaned_data['correo']
-            usuario.campus = form.cleaned_data['campus']
+            nombre = form.cleaned_data.get('nombre', usuario.nombre_completo.split()[0])
+            apellidos = form.cleaned_data.get('apellidos', ' '.join(usuario.nombre_completo.split()[1:]))
+            telefono = form.cleaned_data.get('telefono', usuario.telefono)
+            campus_id = form.cleaned_data.get('campus')
+            correo = form.cleaned_data.get('correo', usuario.correo)
+
+            usuario.nombre_completo = f"{nombre} {apellidos}"
+            usuario.telefono = telefono or usuario.telefono
+            usuario.correo = correo or usuario.correo
+
+            # Obtener la instancia del campus si se proporciona un ID
+            if campus_id:
+                usuario.campus = Campus.objects.get(id=campus_id)
+
             usuario.save()
             messages.success(request, 'Perfil actualizado exitosamente.')
             return redirect('verPerfil')
         else:
             messages.error(request, 'Por favor corrige los errores en el formulario.')
-            return render(request, 'usuarios/modificarPerfil.html', {'form': form, 'usuario': request.user})
+            return render(request, 'usuarios/modificarPerfil.html', {
+                'form': form,
+                'usuario': request.user,
+                'campus_disponibles': Campus.objects.all(),
+            })
     return redirect('modificarPerfil')
 
 @login_required
@@ -554,4 +587,3 @@ def get_visita_data(request, visita_id):
         return JsonResponse({'error': 'Visita no encontrada'}, status=404)
 
 
-# Create your views here.
