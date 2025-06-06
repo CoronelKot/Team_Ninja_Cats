@@ -99,3 +99,12 @@ class Campus(models.Model):
 
     def __str__(self):
         return self.nombreCampus
+# --------------------------------------------------------
+# Modelo de Ticket
+# --------------------------------------------------------
+
+class Ticket(models.Model):
+    identificador = models.CharField(max_length=12)
+    cambio = models.CharField(max_length=20)
+    actualizacion = models.CharField(max_length=20)
+    corregido = models.BooleanField(default=False)

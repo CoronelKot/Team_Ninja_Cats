@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.utils import timezone
-from .models import Visita, Vehiculo, Equipo, Usuario,Campus
+from .models import Visita, Vehiculo, Equipo, Usuario,Campus, Ticket
 from django.http import JsonResponse
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required, user_passes_test
@@ -8,6 +8,8 @@ from django.contrib import messages
 from .forms import CrearCuentaForm
 from django.contrib.auth import update_session_auth_hash
 from .forms_modificar_perfil import ModificarPerfilForm
+from django.shortcuts import get_object_or_404
+
 
 # ============================
 # Vistas públicas (login/logout)
@@ -348,21 +350,26 @@ def registroVisitanteIH(request):
     return render(request, 'usuarios/registroVisitante.html')
 
 
-
+#Vista para mostrar la informaciónDelCampusIH.
 @login_required
 def informacionDelCampusIH(request, campus_id):
     campus = Campus.objects.get(pk=campus_id)
     visitas = Visita.objects.filter(campus=campus)
     vehiculos = Vehiculo.objects.filter(visita__in=visitas)
     equipos = Equipo.objects.filter(visita__in=visitas)
+    es_trabajador = not request.user.es_admin
+
 
     contexto = {
         'campus': campus,
         'visitas': visitas,
         'vehiculos': vehiculos,
         'equipos': equipos,
+        'es_trabajador': es_trabajador,
     }
     return render(request, 'usuarios/informacionDelCampus.html', contexto)
+
+#Vista para seleccionar un campusIH.
 @login_required
 def seleccionDeCampusIH(request):
     campus = Campus.objects.all()
@@ -371,6 +378,60 @@ def seleccionDeCampusIH(request):
         'campus': campus
     }
     return render(request, 'usuarios/seleccionDeCampus.html',contexto2)
+#Vista para ver los tickets.
+@login_required
+def verTicketIH(request):
+    if request.method == 'POST':
+        ticket_id = request.POST.get('ticket_id')
+        ticket = get_object_or_404(Ticket, id=ticket_id)
+        ticket.corregido = True
+        ticket.save()
+        return redirect('verTicketIH')  # Redirige a sí misma
+
+    tickets = Ticket.objects.filter(corregido=False)
+    contexto = {
+        'tickets': tickets,
+    }
+    return render(request, 'usuarios/verTicket.html', contexto)
+    
+#Vista para la generación de tickets.
+from django.shortcuts import redirect, render
+from django.contrib.auth.decorators import login_required
+from usuarios.models import Visita, Vehiculo, Equipo, Ticket
+
+@login_required
+def crearTicketIH(request, tipo, identificador):
+    campus_id = request.GET.get('campus_id') or request.POST.get('campus_id')
+    nombre = '' 
+
+    if tipo == 'visita':
+        visita = Visita.objects.filter(identificador=identificador).first()
+        nombre = visita.nombre if visita else ''
+    elif tipo == 'vehiculo':
+        vehiculo = Vehiculo.objects.filter(numPlaca=identificador).select_related('visita').first()
+        nombre = vehiculo.visita.nombre if vehiculo else ''
+    elif tipo == 'equipo':
+        equipo = Equipo.objects.filter(descripcion=identificador).select_related('visita').first()
+        nombre = equipo.visita.nombre if equipo else ''
+
+    if request.method == 'POST':
+        cambio = request.POST.get('cambio') if tipo == 'visita' else 'identificador'
+        actualizacion = request.POST.get('actualizacion')
+
+        Ticket.objects.create(
+            identificador=identificador,
+            cambio=cambio,
+            actualizacion=actualizacion
+        )
+        return redirect('informacionDelCampus', campus_id=campus_id)
+
+    contexto = {
+        'tipo': tipo,
+        'identificador': identificador,
+        'nombre': nombre,
+        'campus_id': campus_id,
+    }
+    return render(request, 'usuarios/crearTicket.html', contexto)
 
 @login_required
 def verPerfilIH(request):
