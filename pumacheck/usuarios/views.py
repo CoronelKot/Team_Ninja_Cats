@@ -166,6 +166,12 @@ def registrar_visita(request):
         if not identificador.isdigit() or len(identificador) != 9:
             return JsonResponse({'mensaje': 'El número de cuenta debe tener exactamente 9 dígitos.'}, status=400)
         
+        visita_activa = Visita.objects.filter(identificador=identificador, horaSalida__isnull=True).first()
+        if visita_activa:
+            return JsonResponse({
+                'mensaje': f'Ya existe una visita activa con el identificador {identificador}. No se puede registrar una nueva hasta que finalice la anterior.'
+            }, status=400)
+
         campus = request.user.campus
 
         visita = Visita.objects.create(
@@ -213,14 +219,23 @@ def registrar_visita_visitante(request):
         
         if len(identificador) != 16:
             return JsonResponse({'mensaje': 'El código de CURP debe tener exactamente 16 caracteres.'}, status=400)
-        
+
+        # Verifica si ya hay una visita activa (sin hora de salida) con ese identificador
+        visita_activa = Visita.objects.filter(identificador=identificador, horaSalida__isnull=True).first()
+        if visita_activa:
+            return JsonResponse({
+                'mensaje': f'Ya existe una visita activa con el identificador {identificador}. No se puede registrar una nueva hasta que finalice la anterior.'
+            }, status=400)
+
         campus = request.user.campus
 
         visita = Visita.objects.create(
             nombre=f"{nombre} {apellidos}",
             identificador=identificador,
-            tipo=tipo, horaEntrada=horaEntrada,
-            campus=campus)
+            tipo=tipo,
+            horaEntrada=horaEntrada,
+            campus=campus
+        )
         
         # Si registró vehículo
         num_placa = request.POST.get('placa')
@@ -240,7 +255,6 @@ def registrar_visita_visitante(request):
                 horaEntrada=horaEntrada
             )
 
-        # Devolver una respuesta JSON para que el fetch() sepa que fue exitoso
         return JsonResponse({'mensaje': 'Registro exitoso'})
 
     return JsonResponse({'mensaje': 'Método no permitido'}, status=405)

@@ -2,8 +2,10 @@ document.addEventListener('DOMContentLoaded', () => {
     const form = document.getElementById('form-registro');
     const mensaje = document.getElementById('mensaje');
     const horaEntrada = document.getElementById('horaEntrada');
-    const numCuentaInput = document.getElementById('identificador');
+    const identificadorInput = document.getElementById('identificador');
     const placasInput = document.getElementById('placas');
+    const nombreInput = document.getElementById('nombre');
+    const apellidosInput = document.getElementById('apellidos');
 
     // --- Establecer hora actual en horaEntrada ---
     function pad(n) {
@@ -18,12 +20,11 @@ document.addEventListener('DOMContentLoaded', () => {
         const horas = pad(ahora.getHours());
         const minutos = pad(ahora.getMinutes());
 
-        // formato requerido por datetime-local: YYYY-MM-DDTHH:MM
         horaEntrada.value = `${año}-${mes}-${dia}T${horas}:${minutos}`;
     }
 
-    actualizarHora(); // Al cargar
-    setInterval(actualizarHora, 1000); // Opcional: actualizar cada segundo
+    actualizarHora();
+    setInterval(actualizarHora, 1000);
 
     // --- Mensajes personalizados para campos requeridos ---
     const campos = ['nombre', 'apellidos', 'identificador'];
@@ -42,6 +43,24 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
+    // --- Validación en tiempo real de nombre y apellidos ---
+    function validarTexto(input) {
+        const valor = input.value.trim();
+        const esValido = /^[A-Za-zÁÉÍÓÚáéíóúÑñ\s]+$/.test(valor);
+        if (valor === '') {
+            input.classList.remove('is-invalid', 'is-valid');
+        } else if (esValido) {
+            input.classList.remove('is-invalid');
+            input.classList.add('is-valid');
+        } else {
+            input.classList.add('is-invalid');
+            input.classList.remove('is-valid');
+        }
+    }
+
+    nombreInput.addEventListener('input', () => validarTexto(nombreInput));
+    apellidosInput.addEventListener('input', () => validarTexto(apellidosInput));
+
     // --- Validación completa y envío del formulario ---
     form.addEventListener('submit', async (e) => {
         e.preventDefault();
@@ -49,10 +68,26 @@ document.addEventListener('DOMContentLoaded', () => {
         mensaje.className = '';
         let errores = [];
 
+        // Validar nombre
+        const nombre = nombreInput.value.trim();
+        if (!/^[A-Za-zÁÉÍÓÚáéíóúÑñ\s]+$/.test(nombre)) {
+            errores.push("El nombre solo puede contener letras y espacios.");
+            nombreInput.classList.add('is-invalid');
+            nombreInput.classList.remove('is-valid');
+        }
+
+        // Validar apellidos
+        const apellidos = apellidosInput.value.trim();
+        if (!/^[A-Za-zÁÉÍÓÚáéíóúÑñ\s]+$/.test(apellidos)) {
+            errores.push("Los apellidos solo pueden contener letras y espacios.");
+            apellidosInput.classList.add('is-invalid');
+            apellidosInput.classList.remove('is-valid');
+        }
+
         // Validar número de cuenta
-        const identificador = numCuentaInput.value.trim();
+        const identificador = identificadorInput.value.trim();
         if (!/^[A-Z0-9]{16}$/i.test(identificador)) {
-            errores.push("El CURP debe tener exactamente 16 dígitos.");
+            errores.push("El número CURP debe tener exactamente 16 cáracteres alfanuméricos.");
             numCuentaInput.classList.add('is-invalid');
         } else {
             numCuentaInput.classList.remove('is-invalid');
@@ -76,7 +111,7 @@ document.addEventListener('DOMContentLoaded', () => {
             form.classList.add('was-validated');
         }
 
-        // Mostrar errores y no enviar si hay alguno
+        // Mostrar errores y detener envío
         if (errores.length > 0) {
             mensaje.innerHTML = `<div class="alert alert-danger">${errores.join('<br>')}</div>`;
             return;
@@ -106,6 +141,12 @@ document.addEventListener('DOMContentLoaded', () => {
                 });
                 form.reset();
                 form.classList.remove('was-validated');
+
+                // Limpiar clases de validación visual
+                [nombreInput, apellidosInput, identificadorInput, placasInput].forEach(input => {
+                    input.classList.remove('is-invalid', 'is-valid');
+                });
+
             } else {
                 mensaje.innerHTML = `<div class="alert alert-danger">${data.mensaje || 'Error en el registro.'}</div>`;
             }
