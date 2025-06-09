@@ -1,0 +1,35 @@
+{% extends 'usuarios/base.html' %}
+
+{% block content %}
+    <!-- Contenido principal -->
+    <div class="d-flex justify-content-center align-items-center vh-50">
+        <div class="card p-4 shadow-lg" style="width: 800px;">
+            <h2 class="text-center mb-4">Tickets</h2>
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>Identificador</th>
+                        <th>Cambio</th>
+                        <th>Actualización</th>
+                    </tr>    
+                </thead>
+                <tbody>
+                    {% for ticket in tickets %}
+                    <tr>
+                        <td>{{ ticket.identificador }}</td>
+                        <td>{{ ticket.cambio }}</td>
+			            <td>{{ ticket.actualizacion }}</td>
+                        <td>
+                        <form method="post" action="{% url 'verTicketIH' %}">
+                            {% csrf_token %}
+                            <input type="hidden" name="ticket_id" value="{{ ticket.id }}">
+                            <button type="submit" class="btn btn-success">Hecho</button>
+                        </form>
+                        </td>
+                    </tr>
+                    {% endfor %}
+
+                </tbody>
+            </table>
+    </div>
+{% endblock %}

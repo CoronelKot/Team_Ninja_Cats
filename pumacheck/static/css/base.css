@@ -1,0 +1,52 @@
+body {
+    background-color: #FFFAFA; /* Fondo beige */
+}
+.navbar {
+    background-color: #111466; /* Azul oscuro */
+    padding: 30px;
+}
+.navbar-brand {
+    font-size: 24px;
+    font-weight: bold;
+    color: gold;
+}
+.btn-custom {
+    background-color: #ACACAC;
+    color: #B8860B;
+    border: none;
+    padding: 10px 20px;
+    font-weight: bold;
+}
+.btn-custom:hover {
+    background-color: darkgray;
+}
+.registro-btn {
+    width: 250px;
+    height: 80px;
+    background-color: gray;
+    color: #B8860B;
+    font-weight: bold;
+    border: none;
+    font-size: 20px;
+}
+.registro-btn:hover {
+    background-color: darkgray;
+}
+.modal-content {
+    background-color: #d1d1d1;
+}
+.modal-body .btn {
+    background-color: #111466;
+    border: none;
+    font-size: 20px;
+    color: white;
+    padding: 15px 30px;
+}
+
+.body-fondo {
+    background-image: url("../images/Biblioteca3.jpg_large");
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    min-height: 100vh;
+}
